@@ -6,6 +6,9 @@
     <title>myLurch – DISG Kommunikations-Analyse</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        html {
+            scroll-behavior: smooth;
+        }
         .quadrant-card {
             transition: all 0.2s ease;
         }
@@ -27,6 +30,9 @@
         }
         .btn-secondary:hover {
             background: #f8fafc;
+        }
+        #rewriteSection {
+            scroll-margin-top: 2rem;
         }
     </style>
 </head>
@@ -320,13 +326,26 @@
 
         async function analyzeType(type, text) {
             const info = typeInfo[type];
-            const prompt = `Du bist ein DISG-Kommunikationsexperte. Analysiere die folgende Nachricht aus der Perspektive eines ${info.name}-Typs (${info.traits}).
+            
+            // Hochwertiger System-Prompt mit Bezug auf "Der Nutzen"
+            const prompt = `Du bist ein professioneller DISG-Kommunikationsberater. Analysiere die folgende Nachricht aus der Perspektive eines ${info.name}-Typs.
+
+DISG-Profil: ${info.name} (${info.traits}). ${info.focus}.
 
 Nachricht: "${text}"
 
-Schreibe eine präzise Analyse (2-3 Sätze), wie eine Person mit ${info.name}-Profil diese Nachricht interpretieren und darauf reagieren würde. ${info.focus}.
+AUFGABE: Erstelle eine präzise, professionelle Analyse (2-3 Sätze), die zeigt:
 
-Antworte nur mit der Analyse, ohne Einleitung.`;
+1. Wie dieser Persönlichkeitstyp die Nachricht interpretiert und welche Aspekte er priorisiert
+2. Welche potenziellen Missverständnisse oder Ineffizienzen entstehen könnten
+3. Konkrete Hinweise darauf, wie die Nachricht optimiert werden könnte, um Konflikte zu reduzieren
+
+KONTEXT: 
+- Wenn die Nachricht zu vage ist, erkläre explizit, warum dies zu Ineffizienz führt
+- Wenn die Nachricht zu direkt/hart ist, weise auf Konfliktpotential hin
+- Wenn wichtige Details fehlen (bei G-Typ), benenne diese konkret
+
+Antworte sachlich, direkt und handlungsorientiert. Keine Floskeln, nur relevante Insights.`;
 
             try {
                 const response = await fetch('/api/analyze', {
@@ -363,15 +382,45 @@ Antworte nur mit der Analyse, ohne Einleitung.`;
                 rewriteSection.classList.remove('hidden');
                 rewriteResult.textContent = 'Nachricht wird umgeschrieben...';
 
+                // Sanfte Scroll-Animation zum Rewrite-Bereich
+                setTimeout(() => {
+                    rewriteSection.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'start'
+                    });
+                }, 100);
+
                 try {
                     const info = typeInfo[targetType];
-                    const prompt = `Du bist ein professioneller Kommunikationsberater. Schreibe die folgende Nachricht so um, dass sie optimal auf einen ${info.name}-Typ (${info.traits}) wirkt. ${info.focus}.
+                    
+                    // Hochwertiger Umschreib-Prompt
+                    const prompt = `Du bist ein professioneller Kommunikationsberater mit Expertise in DISG-Modellen. Transformiere die folgende Nachricht für einen ${info.name}-Typ.
 
-Originalnachricht: "${text}"
+ZIEL-PROFIL: ${info.name}
+- Merkmale: ${info.traits}
+- ${info.focus}
 
-Schreibe die Nachricht komplett um, sodass sie für den ${info.name}-Typ perfekt verständlich und ansprechend ist. Behalte die Kernbotschaft bei, passe aber Ton, Struktur und Formulierung an.
+ORIGINAL-NACHRICHT:
+"${text}"
 
-Gib NUR die umgeschriebene Nachricht zurück, ohne Erklärungen oder Kommentare.`;
+AUFGABE: Schreibe die Nachricht komplett um, sodass sie:
+
+1. DIE SPRACHE DES ZIELTYPS SPIEGELT:
+   ${targetType === 'd' ? '- Direkt, knapp, ergebnisorientiert\n   - Klare Handlungsaufforderungen\n   - Bottom-Line zuerst\n   - Keine Umschweife' : ''}
+   ${targetType === 'i' ? '- Enthusiastisch, positiv formuliert\n   - Persönliche Ansprache\n   - Vision und Möglichkeiten betonen\n   - Beziehungsaspekte einbeziehen' : ''}
+   ${targetType === 's' ? '- Ruhig, unterstützend, teamorientiert\n   - Betonung von Gemeinsamkeit ("wir")\n   - Schrittweise Herangehensweise\n   - Stabilität und Sicherheit vermitteln' : ''}
+   ${targetType === 'g' ? '- Faktenbasiert, präzise, strukturiert\n   - Daten und Details einbeziehen\n   - Logische Argumentation\n   - Qualitätsorientierung betonen' : ''}
+
+2. KONFLIKTE REDUZIERT:
+   - Potentielle Missverständnisse eliminieren
+   - Triggerpunkte des Typs vermeiden
+   - Optimale Empfangsbereitschaft schaffen
+
+3. KERNBOTSCHAFT BEIBEHÄLT:
+   - Inhaltlich identisch
+   - Nur Ton, Struktur und Formulierung anpassen
+
+Gib NUR die umgeschriebene Nachricht zurück. Keine Erklärungen, keine Metakommentare, keine Anführungszeichen am Anfang/Ende.`;
 
                     const response = await fetch('/api/analyze', {
                         method: 'POST',
@@ -382,7 +431,15 @@ Gib NUR die umgeschriebene Nachricht zurück, ohne Erklärungen oder Kommentare.
                     if (!response.ok) throw new Error(`API Error: ${response.status}`);
 
                     const data = await response.json();
-                    rewriteResult.textContent = data.result;
+                    
+                    // Entferne eventuelle Anführungszeichen am Anfang/Ende
+                    let result = data.result.trim();
+                    if ((result.startsWith('"') && result.endsWith('"')) || 
+                        (result.startsWith("'") && result.endsWith("'"))) {
+                        result = result.slice(1, -1);
+                    }
+                    
+                    rewriteResult.textContent = result;
                 } catch (error) {
                     rewriteResult.textContent = 'Fehler beim Umschreiben. Bitte versuchen Sie es erneut.';
                     console.error('Fehler:', error);
