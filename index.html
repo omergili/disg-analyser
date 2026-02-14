@@ -3,306 +3,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>myLurch – Strategische Planung durch Perspektivwechsel</title>
+    <title>myLurch – Strategischer Perspektivwechsel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        html {
-            scroll-behavior: smooth;
-        }
-        .strategy-card {
-            transition: all 0.2s ease;
-        }
-        .strategy-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(30, 41, 59, 0.15);
-        }
-        .btn-primary {
-            background: #1e293b;
-            transition: all 0.2s ease;
-        }
-        .btn-primary:hover {
-            background: #334155;
-        }
-        .type-selector {
-            transition: all 0.2s ease;
-        }
-        .type-selector:hover {
-            border-color: #1e293b;
-        }
-        .type-selector:checked {
-            background: #1e293b;
-            border-color: #1e293b;
-        }
-        #checklistSection, #warningSection {
-            scroll-margin-top: 2rem;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .strategy-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .focus-glow { box-shadow: 0 0 20px rgba(245, 158, 11, 0.3); border: 2px solid #f59e0b !important; }
+        .input-focus:focus { border-color: #1e293b; ring: 4px; ring-color: #e2e8f0; }
+        html { scroll-behavior: smooth; }
     </style>
 </head>
-<body class="bg-white">
-    <!-- Header -->
-    <header class="bg-slate-900 text-white py-6 shadow-md">
-        <div class="max-w-7xl mx-auto px-4">
-            <h1 class="text-3xl font-bold tracking-tight">myLurch</h1>
-            <p class="text-slate-300 mt-1">Strategische Planung durch Perspektivwechsel</p>
+<body class="bg-slate-50 text-slate-900">
+
+    <header class="bg-slate-900 text-white py-10 shadow-2xl">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-end">
+                <div>
+                    <h1 class="text-5xl font-black tracking-tighter mb-2">myLurch<span class="text-amber-500">.</span></h1>
+                    <p class="text-slate-400 text-lg font-light">Strategische Planung durch Perspektivwechsel.</p>
+                </div>
+                <div class="hidden md:block text-right">
+                    <span class="text-xs uppercase tracking-widest text-slate-500 font-bold">Business Sparring Tool</span>
+                </div>
+            </div>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="bg-slate-50 py-8 border-b border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <h2 class="text-2xl font-semibold text-slate-900 mb-2">
-                Strategische Planung durch Perspektivwechsel
-            </h2>
-            <p class="text-slate-600 max-w-2xl mx-auto">
-                Betrachte Aufgaben und Projekte aus allen vier DISG-Perspektiven und entwickle ganzheitliche Strategien
-            </p>
-        </div>
-    </section>
-
-    <!-- Main Tool Section -->
-    <main class="max-w-7xl mx-auto px-4 py-12">
+    <main class="max-w-6xl mx-auto px-6 -mt-8">
+        
         <!-- Input Section -->
-        <div class="bg-white border-2 border-slate-200 rounded-lg p-8 mb-8 shadow-sm">
-            <label for="taskInput" class="block text-lg font-semibold text-slate-900 mb-3">
-                Aufgabe oder Ziel definieren
-            </label>
-            <textarea 
-                id="taskInput" 
-                rows="4" 
-                class="w-full p-4 border-2 border-slate-300 rounded-lg focus:border-slate-900 focus:ring-2 focus:ring-slate-200 outline-none transition font-mono text-sm"
-                placeholder="z.B. Ein neues Produkt launchen, Ein Team aufbauen, Eine Präsentation vorbereiten..."
-            ></textarea>
-            
-            <!-- Type Selection -->
-            <div class="mt-6 mb-6">
-                <label class="block text-lg font-semibold text-slate-900 mb-3">
-                    Was ist dein eigener Typ?
-                </label>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <label class="flex items-center p-4 border-2 border-slate-200 rounded-lg cursor-pointer hover:border-slate-400 transition">
-                        <input type="radio" name="userType" value="d" class="type-selector w-4 h-4 text-slate-900 mr-3">
-                        <div>
-                            <div class="font-semibold text-slate-900">Dominant (D)</div>
-                            <div class="text-xs text-slate-600">Ergebnisorientiert</div>
-                        </div>
-                    </label>
-                    <label class="flex items-center p-4 border-2 border-slate-200 rounded-lg cursor-pointer hover:border-slate-400 transition">
-                        <input type="radio" name="userType" value="i" class="type-selector w-4 h-4 text-slate-900 mr-3">
-                        <div>
-                            <div class="font-semibold text-slate-900">Initiativ (I)</div>
-                            <div class="text-xs text-slate-600">Kommunikativ</div>
-                        </div>
-                    </label>
-                    <label class="flex items-center p-4 border-2 border-slate-200 rounded-lg cursor-pointer hover:border-slate-400 transition">
-                        <input type="radio" name="userType" value="s" class="type-selector w-4 h-4 text-slate-900 mr-3">
-                        <div>
-                            <div class="font-semibold text-slate-900">Stetig (S)</div>
-                            <div class="text-xs text-slate-600">Teamorientiert</div>
-                        </div>
-                    </label>
-                    <label class="flex items-center p-4 border-2 border-slate-200 rounded-lg cursor-pointer hover:border-slate-400 transition">
-                        <input type="radio" name="userType" value="g" class="type-selector w-4 h-4 text-slate-900 mr-3">
-                        <div>
-                            <div class="font-semibold text-slate-900">Gewissenhaft (G)</div>
-                            <div class="text-xs text-slate-600">Analytisch</div>
-                        </div>
-                    </label>
+        <div class="bg-white rounded-3xl shadow-2xl p-8 md:p-12 border border-slate-200">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                
+                <div class="lg:col-span-7">
+                    <label class="block text-sm font-bold uppercase tracking-wider text-slate-500 mb-3">Aktuelles Vorhaben / Aufgabe</label>
+                    <textarea id="taskInput" rows="4" class="w-full p-6 bg-slate-50 border-2 border-slate-100 rounded-2xl input-focus outline-none text-xl font-medium" placeholder="z.B. Ein neues Produkt launchen, Team aufbauen, Change Management..."></textarea>
                 </div>
-            </div>
 
-            <!-- Setting Selection -->
-            <div class="mt-6 mb-6">
-                <label class="block text-lg font-semibold text-slate-900 mb-3">
-                    In welchem Setting arbeitest du?
-                </label>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <label class="flex items-start p-4 border-2 border-slate-200 rounded-lg cursor-pointer hover:border-slate-400 transition">
-                        <input type="radio" name="setting" value="solo" class="type-selector w-4 h-4 text-slate-900 mr-3 mt-1">
-                        <div>
-                            <div class="font-semibold text-slate-900">Solo</div>
-                            <div class="text-xs text-slate-600">Alleine, Selbstmanagement</div>
+                <div class="lg:col-span-5 flex flex-col justify-between">
+                    <div>
+                        <label class="block text-sm font-bold uppercase tracking-wider text-slate-500 mb-3">Dein DISG-Typ</label>
+                        <div class="grid grid-cols-4 gap-2 mb-6">
+                            <button type="button" data-type="d" class="type-btn py-3 rounded-xl border-2 border-slate-100 font-bold hover:bg-slate-50 transition">D</button>
+                            <button type="button" data-type="i" class="type-btn py-3 rounded-xl border-2 border-slate-100 font-bold hover:bg-slate-50 transition">I</button>
+                            <button type="button" data-type="s" class="type-btn py-3 rounded-xl border-2 border-slate-100 font-bold hover:bg-slate-50 transition">S</button>
+                            <button type="button" data-type="g" class="type-btn py-3 rounded-xl border-2 border-slate-100 font-bold hover:bg-slate-50 transition">G</button>
                         </div>
-                    </label>
-                    <label class="flex items-start p-4 border-2 border-slate-200 rounded-lg cursor-pointer hover:border-slate-400 transition">
-                        <input type="radio" name="setting" value="small_team" class="type-selector w-4 h-4 text-slate-900 mr-3 mt-1">
-                        <div>
-                            <div class="font-semibold text-slate-900">Kleines Team</div>
-                            <div class="text-xs text-slate-600">3-8 Personen, direkte Zusammenarbeit</div>
-                        </div>
-                    </label>
-                    <label class="flex items-start p-4 border-2 border-slate-200 rounded-lg cursor-pointer hover:border-slate-400 transition">
-                        <input type="radio" name="setting" value="specialists" class="type-selector w-4 h-4 text-slate-900 mr-3 mt-1">
-                        <div>
-                            <div class="font-semibold text-slate-900">Spezialisten-Team</div>
-                            <div class="text-xs text-slate-600">Experten, Delegation, Schnittstellen</div>
-                        </div>
-                    </label>
+
+                        <label class="block text-sm font-bold uppercase tracking-wider text-slate-500 mb-3">Setting</label>
+                        <select id="settingSelect" class="w-full p-4 bg-slate-50 border-2 border-slate-100 rounded-xl font-semibold outline-none">
+                            <option value="solo">Solo (Eigenregie)</option>
+                            <option value="small_team">Kleines Team (3-8 Personen)</option>
+                            <option value="specialists">Spezialisten-Team (Experten)</option>
+                        </select>
+                    </div>
+                    <button id="mainAction" class="w-full bg-slate-900 text-white font-black py-5 rounded-2xl mt-6 hover:bg-black transition-all shadow-lg uppercase tracking-widest">
+                        Strategien entwickeln
+                    </button>
                 </div>
             </div>
-            
-            <button 
-                id="analyzeBtn"
-                class="btn-primary text-white font-semibold py-3 px-8 rounded-lg w-full"
-            >
-                Strategien entwickeln
-            </button>
         </div>
 
-        <!-- Strategies Grid -->
-        <div id="strategiesSection" class="mb-12">
-            <h3 class="text-xl font-semibold text-slate-900 mb-6">DISG-Strategien</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Strategies Section -->
+        <div id="strategiesArea" class="mt-16 hidden">
+            <h2 class="text-3xl font-black mb-8 flex items-center">
+                <span class="bg-slate-900 text-white px-4 py-1 rounded-lg mr-4">Strategien</span>
+                Vier Perspektiven
+            </h2>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-12">
                 <!-- D Strategy -->
-                <div class="strategy-card bg-white border-2 border-slate-200 rounded-lg p-6">
-                    <div class="flex items-center mb-4 pb-3 border-b border-slate-200">
-                        <div class="w-3 h-8 bg-red-600 rounded mr-3"></div>
+                <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-lg transition strategy-card">
+                    <div class="flex items-center mb-6">
+                        <div class="w-3 h-12 bg-red-600 rounded mr-4"></div>
                         <div>
-                            <h4 class="text-lg font-bold text-slate-900">Die D-Strategie</h4>
-                            <p class="text-sm text-slate-600">Ergebnisorientierter Ansatz</p>
+                            <h3 class="text-xl font-extrabold">Die D-Strategie</h3>
+                            <p class="text-xs text-slate-500 uppercase tracking-wider">Ergebnisorientiert</p>
                         </div>
                     </div>
-                    <div id="strategy-d" class="text-slate-700 leading-relaxed min-h-[120px]">
-                        <p class="text-slate-400 italic">Wartet auf Eingabe</p>
+                    <div id="strategy-d" class="text-slate-700 leading-relaxed min-h-[100px]">
+                        <p class="text-slate-400 italic">Wartet auf Eingabe...</p>
                     </div>
                 </div>
 
                 <!-- I Strategy -->
-                <div class="strategy-card bg-white border-2 border-slate-200 rounded-lg p-6">
-                    <div class="flex items-center mb-4 pb-3 border-b border-slate-200">
-                        <div class="w-3 h-8 bg-yellow-500 rounded mr-3"></div>
+                <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-lg transition strategy-card">
+                    <div class="flex items-center mb-6">
+                        <div class="w-3 h-12 bg-yellow-500 rounded mr-4"></div>
                         <div>
-                            <h4 class="text-lg font-bold text-slate-900">Die I-Strategie</h4>
-                            <p class="text-sm text-slate-600">Beziehungsorientierter Ansatz</p>
+                            <h3 class="text-xl font-extrabold">Die I-Strategie</h3>
+                            <p class="text-xs text-slate-500 uppercase tracking-wider">Beziehungsorientiert</p>
                         </div>
                     </div>
-                    <div id="strategy-i" class="text-slate-700 leading-relaxed min-h-[120px]">
-                        <p class="text-slate-400 italic">Wartet auf Eingabe</p>
+                    <div id="strategy-i" class="text-slate-700 leading-relaxed min-h-[100px]">
+                        <p class="text-slate-400 italic">Wartet auf Eingabe...</p>
                     </div>
                 </div>
 
                 <!-- S Strategy -->
-                <div class="strategy-card bg-white border-2 border-slate-200 rounded-lg p-6">
-                    <div class="flex items-center mb-4 pb-3 border-b border-slate-200">
-                        <div class="w-3 h-8 bg-green-600 rounded mr-3"></div>
+                <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-lg transition strategy-card">
+                    <div class="flex items-center mb-6">
+                        <div class="w-3 h-12 bg-green-600 rounded mr-4"></div>
                         <div>
-                            <h4 class="text-lg font-bold text-slate-900">Die S-Strategie</h4>
-                            <p class="text-sm text-slate-600">Stabilitätsorientierter Ansatz</p>
+                            <h3 class="text-xl font-extrabold">Die S-Strategie</h3>
+                            <p class="text-xs text-slate-500 uppercase tracking-wider">Stabilitätsorientiert</p>
                         </div>
                     </div>
-                    <div id="strategy-s" class="text-slate-700 leading-relaxed min-h-[120px]">
-                        <p class="text-slate-400 italic">Wartet auf Eingabe</p>
+                    <div id="strategy-s" class="text-slate-700 leading-relaxed min-h-[100px]">
+                        <p class="text-slate-400 italic">Wartet auf Eingabe...</p>
                     </div>
                 </div>
 
                 <!-- G Strategy -->
-                <div class="strategy-card bg-white border-2 border-slate-200 rounded-lg p-6">
-                    <div class="flex items-center mb-4 pb-3 border-b border-slate-200">
-                        <div class="w-3 h-8 bg-blue-600 rounded mr-3"></div>
+                <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-lg transition strategy-card">
+                    <div class="flex items-center mb-6">
+                        <div class="w-3 h-12 bg-blue-600 rounded mr-4"></div>
                         <div>
-                            <h4 class="text-lg font-bold text-slate-900">Die G-Strategie</h4>
-                            <p class="text-sm text-slate-600">Qualitätsorientierter Ansatz</p>
+                            <h3 class="text-xl font-extrabold">Die G-Strategie</h3>
+                            <p class="text-xs text-slate-500 uppercase tracking-wider">Qualitätsorientiert</p>
                         </div>
                     </div>
-                    <div id="strategy-g" class="text-slate-700 leading-relaxed min-h-[120px]">
-                        <p class="text-slate-400 italic">Wartet auf Eingabe</p>
+                    <div id="strategy-g" class="text-slate-700 leading-relaxed min-h-[100px]">
+                        <p class="text-slate-400 italic">Wartet auf Eingabe...</p>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Warning Section -->
-        <div id="warningSection" class="mb-12 hidden">
-            <div class="bg-amber-50 border-l-4 border-amber-500 rounded-lg p-6 shadow-sm">
-                <div class="flex items-start">
-                    <svg class="w-6 h-6 text-amber-500 mt-1 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
-                    </svg>
-                    <div>
-                        <h4 class="text-lg font-bold text-amber-900 mb-2">Achtung: Blinde Flecken</h4>
-                        <div id="warningContent" class="text-amber-800 leading-relaxed"></div>
-                    </div>
-                </div>
+            <!-- Mini Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+                <div class="p-4 bg-white border border-slate-200 rounded-2xl text-center"><div class="text-xs font-bold text-red-600">D</div><div class="text-[10px] text-slate-400">Execution</div></div>
+                <div class="p-4 bg-white border border-slate-200 rounded-2xl text-center"><div class="text-xs font-bold text-yellow-500">I</div><div class="text-[10px] text-slate-400">Vision</div></div>
+                <div class="p-4 bg-white border border-slate-200 rounded-2xl text-center"><div class="text-xs font-bold text-green-600">S</div><div class="text-[10px] text-slate-400">Team</div></div>
+                <div class="p-4 bg-white border border-slate-200 rounded-2xl text-center"><div class="text-xs font-bold text-blue-600">G</div><div class="text-[10px] text-slate-400">Qualität</div></div>
             </div>
         </div>
 
-        <!-- Checklist Section -->
-        <div id="checklistSection" class="mb-12 hidden">
-            <h3 class="text-xl font-semibold text-slate-900 mb-4">Was du wahrscheinlich vergisst</h3>
-            <div class="bg-slate-50 border-2 border-slate-200 rounded-lg p-6">
-                <div id="checklistContent" class="space-y-3"></div>
+        <!-- Personal Warning & Checklist -->
+        <div id="personalArea" class="hidden">
+            <!-- Warning -->
+            <div id="warningSection" class="mb-12 hidden">
+                <div class="bg-slate-900 rounded-3xl p-8 text-white shadow-2xl border-4 border-amber-500/30 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-4 opacity-10">
+                        <svg class="w-32 h-32" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+                    </div>
+                    <div class="flex items-center mb-6 relative z-10">
+                        <div class="p-3 bg-amber-500 text-slate-900 rounded-full mr-4">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        </div>
+                        <h3 class="text-xl font-extrabold">Achtung: Blinde Flecken</h3>
+                    </div>
+                    <div id="warningContent" class="text-slate-200 leading-relaxed relative z-10"></div>
+                </div>
+            </div>
+
+            <!-- Checklist -->
+            <div id="checklistSection" class="mb-12 hidden">
+                <h3 class="text-3xl font-black mb-6 flex items-center">
+                    <span class="bg-amber-500 text-slate-900 px-4 py-1 rounded-lg mr-4">Checkliste</span>
+                    Was du wahrscheinlich vergisst
+                </h3>
+                <div class="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm">
+                    <div id="checklistContent" class="space-y-4"></div>
+                </div>
             </div>
         </div>
 
         <!-- Info Section -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-12 border-t-2 border-slate-200">
-            <!-- Der Nutzen -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-16 pb-20 border-t-2 border-slate-200">
             <div>
-                <h3 class="text-xl font-bold text-slate-900 mb-4">Der Nutzen</h3>
+                <h3 class="text-xl font-black text-slate-900 mb-4 uppercase tracking-wider">Der Nutzen</h3>
                 <div class="text-slate-700 space-y-3 leading-relaxed">
-                    <p>
-                        <strong>Ganzheitliche Planung:</strong> Jeder DISG-Typ hat natürliche blinde Flecken. 
-                        Durch Betrachtung aus allen vier Perspektiven entstehen vollständigere Strategien.
-                    </p>
-                    <p>
-                        <strong>Risiken minimieren:</strong> Was ein D-Typ als unwichtig einstuft, kann für 
-                        den Projekterfolg kritisch sein. Die systematische Perspektivwechsel deckt dies auf.
-                    </p>
-                    <p>
-                        <strong>Teamkommunikation verbessern:</strong> Verstehen, warum Kollegen andere 
-                        Prioritäten setzen. Konflikte werden zu produktiven Diskussionen.
-                    </p>
-                    <p>
-                        <strong>Anwendungsbereich:</strong> Projektplanung, Produktentwicklung, Change Management, 
-                        Strategieentwicklung, Teamaufbau.
-                    </p>
+                    <p><strong>Ganzheitliche Planung:</strong> Jeder DISG-Typ hat blinde Flecken. Durch Betrachtung aus allen vier Perspektiven entstehen vollständigere Strategien.</p>
+                    <p><strong>Risiken minimieren:</strong> Was ein D-Typ als unwichtig einstuft, kann kritisch sein. Der Perspektivwechsel deckt dies auf.</p>
+                    <p><strong>Teamkommunikation:</strong> Verstehen, warum Kollegen andere Prioritäten setzen. Konflikte werden produktiv.</p>
                 </div>
             </div>
 
-            <!-- Das Modell -->
             <div>
-                <h3 class="text-xl font-bold text-slate-900 mb-4">Die Strategietypen</h3>
+                <h3 class="text-xl font-black text-slate-900 mb-4 uppercase tracking-wider">Die Strategietypen</h3>
                 <div class="space-y-4">
                     <div class="flex items-start">
                         <div class="w-4 h-4 bg-red-600 rounded mr-3 mt-1 flex-shrink-0"></div>
                         <div>
-                            <h4 class="font-semibold text-slate-900">D-Strategie (Dominant)</h4>
-                            <p class="text-sm text-slate-600">
-                                Fokus auf schnelle Ergebnisse, klare Verantwortlichkeiten, Entscheidungsgeschwindigkeit. 
-                                Vergisst oft: Details, Prozesse, Menschen-Aspekte.
-                            </p>
+                            <h4 class="font-bold text-slate-900">D-Strategie</h4>
+                            <p class="text-sm text-slate-600">Schnelle Ergebnisse, klare Verantwortlichkeiten. Vergisst: Details, Prozesse, Menschen.</p>
                         </div>
                     </div>
-
                     <div class="flex items-start">
                         <div class="w-4 h-4 bg-yellow-500 rounded mr-3 mt-1 flex-shrink-0"></div>
                         <div>
-                            <h4 class="font-semibold text-slate-900">I-Strategie (Initiativ)</h4>
-                            <p class="text-sm text-slate-600">
-                                Fokus auf Begeisterung, Zusammenarbeit, kreative Lösungen, Netzwerke. 
-                                Vergisst oft: Details, Struktur, Follow-through.
-                            </p>
+                            <h4 class="font-bold text-slate-900">I-Strategie</h4>
+                            <p class="text-sm text-slate-600">Begeisterung, Kreativität, Netzwerke. Vergisst: Details, Struktur, Follow-through.</p>
                         </div>
                     </div>
-
                     <div class="flex items-start">
                         <div class="w-4 h-4 bg-green-600 rounded mr-3 mt-1 flex-shrink-0"></div>
                         <div>
-                            <h4 class="font-semibold text-slate-900">S-Strategie (Stetig)</h4>
-                            <p class="text-sm text-slate-600">
-                                Fokus auf Stabilität, bewährte Prozesse, Teamharmonie, schrittweises Vorgehen. 
-                                Vergisst oft: Geschwindigkeit, Innovation, Risiken.
-                            </p>
+                            <h4 class="font-bold text-slate-900">S-Strategie</h4>
+                            <p class="text-sm text-slate-600">Stabilität, Prozesse, Teamharmonie. Vergisst: Geschwindigkeit, Innovation, Risiken.</p>
                         </div>
                     </div>
-
                     <div class="flex items-start">
                         <div class="w-4 h-4 bg-blue-600 rounded mr-3 mt-1 flex-shrink-0"></div>
                         <div>
-                            <h4 class="font-semibold text-slate-900">G-Strategie (Gewissenhaft)</h4>
-                            <p class="text-sm text-slate-600">
-                                Fokus auf Qualität, Daten, Risikomanagement, Standards, Dokumentation. 
-                                Vergisst oft: Geschwindigkeit, pragmatische Kompromisse, Beziehungen.
-                            </p>
+                            <h4 class="font-bold text-slate-900">G-Strategie</h4>
+                            <p class="text-sm text-slate-600">Qualität, Daten, Risikomanagement. Vergisst: Geschwindigkeit, Pragmatismus, Beziehungen.</p>
                         </div>
                     </div>
                 </div>
@@ -310,22 +216,16 @@
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-400 py-8 mt-16">
-        <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-sm">myLurch – Strategische Planung durch Perspektivwechsel</p>
+    <footer class="bg-slate-100 py-12 border-t border-slate-200">
+        <div class="max-w-6xl mx-auto px-6 text-center text-slate-500 text-sm">
+            <p><strong>myLurch</strong> – Strategische Planung durch Perspektivwechsel.</p>
             <p class="text-xs mt-2">Powered by Groq AI</p>
         </div>
     </footer>
 
     <script>
-        const taskInput = document.getElementById('taskInput');
-        const analyzeBtn = document.getElementById('analyzeBtn');
-        const warningSection = document.getElementById('warningSection');
-        const warningContent = document.getElementById('warningContent');
-        const checklistSection = document.getElementById('checklistSection');
-        const checklistContent = document.getElementById('checklistContent');
-        
+        let currentType = null;
+
         const strategies = {
             d: document.getElementById('strategy-d'),
             i: document.getElementById('strategy-i'),
@@ -337,103 +237,109 @@
             d: {
                 name: 'Dominant',
                 strengths: 'Schnelle Entscheidungen, Ergebnisorientierung, Direktheit',
-                blindSpots: 'Details, Prozesse, Menschen-Aspekte, Langfristfolgen'
+                blindSpots: 'Details, Prozesse, Menschen-Aspekte'
             },
             i: {
                 name: 'Initiativ',
                 strengths: 'Begeisterung, Kreativität, Netzwerke, Teambuilding',
-                blindSpots: 'Details, Struktur, Follow-through, Realistische Planung'
+                blindSpots: 'Details, Struktur, Follow-through'
             },
             s: {
                 name: 'Stetig',
                 strengths: 'Stabilität, Prozesstreue, Teamharmonie, Verlässlichkeit',
-                blindSpots: 'Geschwindigkeit, Innovation, Risikobereitschaft, Konfrontation'
+                blindSpots: 'Geschwindigkeit, Innovation, Risikobereitschaft'
             },
             g: {
                 name: 'Gewissenhaft',
                 strengths: 'Qualität, Analyse, Risikomanagement, Standards',
-                blindSpots: 'Geschwindigkeit, Pragmatismus, Beziehungen, Flexibilität'
+                blindSpots: 'Geschwindigkeit, Pragmatismus, Beziehungen'
             }
         };
 
-        analyzeBtn.addEventListener('click', async () => {
-            const task = taskInput.value.trim();
-            const userType = document.querySelector('input[name="userType"]:checked');
-            const setting = document.querySelector('input[name="setting"]:checked');
+        // Type Selection
+        document.querySelectorAll('.type-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                currentType = this.dataset.type;
+                document.querySelectorAll('.type-btn').forEach(b => {
+                    b.classList.remove('border-amber-500', 'bg-amber-50');
+                });
+                this.classList.add('border-amber-500', 'bg-amber-50');
+            });
+        });
+
+        // Main Action
+        document.getElementById('mainAction').addEventListener('click', async () => {
+            const task = document.getElementById('taskInput').value.trim();
+            const setting = document.getElementById('settingSelect').value;
             
             if (!task) {
                 alert('Bitte Aufgabe oder Ziel eingeben.');
                 return;
             }
 
-            if (!userType) {
+            if (!currentType) {
                 alert('Bitte eigenen Typ auswählen.');
                 return;
             }
 
-            if (!setting) {
-                alert('Bitte Setting auswählen.');
-                return;
-            }
+            const btn = document.getElementById('mainAction');
+            btn.textContent = 'Entwickelt Strategien...';
+            btn.disabled = true;
 
-            analyzeBtn.disabled = true;
-            analyzeBtn.textContent = 'Entwickelt Strategien...';
-            
-            warningSection.classList.add('hidden');
-            checklistSection.classList.add('hidden');
+            document.getElementById('warningSection').classList.add('hidden');
+            document.getElementById('checklistSection').classList.add('hidden');
 
             Object.values(strategies).forEach(el => {
                 el.innerHTML = '<p class="text-slate-400 italic">Wird entwickelt...</p>';
             });
 
             try {
-                // Strategien parallel entwickeln
                 await Promise.all([
-                    developStrategy('d', task, setting.value),
-                    developStrategy('i', task, setting.value),
-                    developStrategy('s', task, setting.value),
-                    developStrategy('g', task, setting.value)
+                    developStrategy('d', task, setting),
+                    developStrategy('i', task, setting),
+                    developStrategy('s', task, setting),
+                    developStrategy('g', task, setting)
                 ]);
 
-                // Warning und Checklist generieren
-                await generateWarning(userType.value, task, setting.value);
-                await generateChecklist(userType.value, task, setting.value);
+                await generateWarning(currentType, task, setting);
+                await generateChecklist(currentType, task, setting);
 
-                // Scroll zu Warning
+                document.getElementById('strategiesArea').classList.remove('hidden');
+                document.getElementById('personalArea').classList.remove('hidden');
+
                 setTimeout(() => {
-                    warningSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    document.getElementById('warningSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }, 500);
 
             } catch (error) {
                 console.error('Fehler:', error);
             } finally {
-                analyzeBtn.disabled = false;
-                analyzeBtn.textContent = 'Strategien entwickeln';
+                btn.disabled = false;
+                btn.textContent = 'Strategien entwickeln';
             }
         });
 
         async function developStrategy(type, task, setting) {
             const info = typeInfo[type];
             
-            // Setting-spezifische Kontexte
             const settingContexts = {
                 solo: {
                     name: 'Solo-Setting',
-                    focus: 'Selbstmanagement, Disziplin, Zeitersparnis, Effizienz',
-                    questions: 'Wie schaffe ich das alleine? Welche Tools/Methoden nutze ich? Wie vermeide ich Verzettlung/Burnout?',
-                    outputFormat: 'Konkrete Tools, Methoden, Zeitmanagement-Strategien, Selbstorganisations-Techniken'
+                    focus: 'Selbstmanagement, Disziplin, Zeitersparnis',
+                    questions: 'Wie schaffe ich das alleine? Welche Tools/Methoden nutze ich?',
+                    outputFormat: 'Konkrete Tools, Methoden, Zeitmanagement-Strategien'
                 },
                 small_team: {
                     name: 'Kleines Team',
-                    focus: 'Kommunikation, Motivation, klare Zuständigkeiten, Teamharmonie',
-                    questions: 'Wie sorge ich für Harmonie UND Tempo? Wie vermeide ich, dass alle alles machen? Wie bleiben wir fokussiert?',
-                    outputFormat: 'Kommunikationsstrukturen, Meeting-Formate, Aufgabenverteilung, Motivations-Methoden'
+                    focus: 'Kommunikation, Motivation, klare Zuständigkeiten',
+                    questions: 'Wie sorge ich für Harmonie UND Tempo? Wie bleiben wir fokussiert?',
+                    outputFormat: 'Kommunikationsstrukturen, Meeting-Formate, Aufgabenverteilung'
                 },
                 specialists: {
                     name: 'Spezialisten-Team',
-                    focus: 'Delegation, Schnittstellenmanagement, Prozesskontrolle, Vision über Abteilungen',
-                    questions: 'Wie steuere ich Experten ohne Mikromanagement? Wie halte ich die Vision aufrecht? Wie manage ich Schnittstellen?',
-                    outputFormat: 'Reporting-Strukturen, Meeting-Formate, Governance, Delegations-Frameworks, OKRs/KPIs'
+                    focus: 'Delegation, Schnittstellenmanagement, Prozesskontrolle',
+                    questions: 'Wie steuere ich Experten ohne Mikromanagement? Wie halte ich die Vision aufrecht?',
+                    outputFormat: 'Reporting-Strukturen, Meeting-Formate, Governance, OKRs'
                 }
             };
 
@@ -445,16 +351,14 @@ AUFGABE: "${task}"
 SETTING: ${settingContext.name} (${settingContext.focus})
 PERSPEKTIVE: ${info.name} (Stärken: ${info.strengths})
 
-SETTING-KONTEXT:
-${settingContext.questions}
+SETTING-KONTEXT: ${settingContext.questions}
 
-Erstelle eine konkrete Strategie (3-4 Sätze), die zeigt:
-
+Erstelle eine konkrete Strategie (3-4 Sätze):
 1. WIE ein ${info.name}-Typ diese Aufgabe im ${settingContext.name} angehen würde
-2. WELCHE setting-spezifischen Aspekte aus dieser Sicht UNBEDINGT beachtet werden müssen
+2. WELCHE setting-spezifischen Aspekte UNBEDINGT beachtet werden müssen
 3. KONKRETE erste Schritte mit Fokus auf: ${settingContext.outputFormat}
 
-Schreibe handlungsorientiert und spezifisch für das ${settingContext.name}. Keine Theorie, sondern konkrete Vorgehensweise.`;
+Schreibe handlungsorientiert und spezifisch für das ${settingContext.name}.`;
 
             try {
                 const response = await fetch('/api/analyze', {
@@ -475,64 +379,50 @@ Schreibe handlungsorientiert und spezifisch für das ${settingContext.name}. Kei
 
         async function generateWarning(userType, task, setting) {
             const info = typeInfo[userType];
-            const complementary = {
-                'd': 's',
-                'i': 'g',
-                's': 'd',
-                'g': 'i'
-            };
+            const complementary = { 'd': 's', 'i': 'g', 's': 'd', 'g': 'i' };
             const weakType = complementary[userType];
             const weakInfo = typeInfo[weakType];
 
-            // Setting-spezifische Risiken
             const settingRisks = {
                 solo: {
-                    d: 'Zu schnell vorpreschen ohne ausreichende Planung. Burnout durch Überarbeitung. Keine Pufferzeit für Unvorhergesehenes.',
-                    i: 'Verzettlung durch zu viele Ideen. Fehlende Disziplin bei Alleinarbeit. Unterschätzung des Zeitaufwands.',
-                    s: 'Zu langsames Tempo aus Angst vor Fehlern. Perfektionismus führt zu Stagnation. Fehlende Selbstmotivation.',
-                    g: 'Verlieren im Detail-Dschungel. Perfektion verhindert Fortschritt. Keine pragmatischen Kompromisse.'
+                    d: 'Zu schnell vorpreschen ohne Planung. Burnout durch Überarbeitung.',
+                    i: 'Verzettlung durch zu viele Ideen. Fehlende Disziplin.',
+                    s: 'Zu langsames Tempo aus Angst. Perfektionismus führt zu Stagnation.',
+                    g: 'Verlieren im Detail-Dschungel. Perfektion verhindert Fortschritt.'
                 },
                 small_team: {
-                    d: 'Team überrollen statt mitnehmen. Keine Zeit für Konsens. Harmonie wird geopfert für Geschwindigkeit.',
-                    i: 'Alle machen alles - keine klaren Zuständigkeiten. Viel Begeisterung, wenig Struktur. Follow-through fehlt.',
-                    s: 'Zu viel Harmonie, zu wenig Tempo. Konflikte werden vermieden. Keine klaren Entscheidungen aus Angst vor Unmut.',
-                    g: 'Mikromanagement statt Vertrauen. Zu viele Prozesse für kleines Team. Team fühlt sich gegängelt.'
+                    d: 'Team überrollen statt mitnehmen. Harmonie wird geopfert.',
+                    i: 'Alle machen alles - keine Zuständigkeiten. Viel Begeisterung, wenig Struktur.',
+                    s: 'Zu viel Harmonie, zu wenig Tempo. Keine klaren Entscheidungen.',
+                    g: 'Mikromanagement statt Vertrauen. Zu viele Prozesse für kleines Team.'
                 },
                 specialists: {
-                    d: 'Experten werden übergangen. Keine Akzeptanz für Top-Down-Entscheidungen. Schnittstellen werden ignoriert.',
-                    i: 'Vision bleibt vage. Begeisterung ersetzt nicht Governance. Fachexperten werden nicht ernst genommen.',
-                    s: 'Zu langsame Entscheidungsfindung über Abteilungen. Konflikte an Schnittstellen werden verschleppt. Keine klare Führung.',
-                    g: 'Mikromanagement von Experten. Details über Big Picture. Reporting-Overhead lähmt das Team.'
+                    d: 'Experten werden übergangen. Schnittstellen werden ignoriert.',
+                    i: 'Vision bleibt vage. Begeisterung ersetzt nicht Governance.',
+                    s: 'Zu langsame Entscheidungen. Konflikte an Schnittstellen verschleppt.',
+                    g: 'Mikromanagement von Experten. Reporting-Overhead lähmt Team.'
                 }
             };
 
-            const settingNames = {
-                solo: 'Solo-Arbeit',
-                small_team: 'Kleinem Team',
-                specialists: 'Spezialisten-Team'
-            };
-
+            const settingNames = { solo: 'Solo-Arbeit', small_team: 'Kleinem Team', specialists: 'Spezialisten-Team' };
             const risk = settingRisks[setting][userType];
             const settingName = settingNames[setting];
 
-            const prompt = `Du bist ein DISG-Coach. Erstelle eine direkte, präzise Warnung für einen ${info.name}-Typ im ${settingName}.
+            const prompt = `Du bist ein DISG-Coach. Erstelle eine direkte Warnung für einen ${info.name}-Typ im ${settingName}.
 
 AUFGABE: "${task}"
 SETTING: ${settingName}
 USER-TYP: ${info.name}
-TYPISCHE RISIKEN IM ${settingName.toUpperCase()}: ${risk}
+TYPISCHE RISIKEN: ${risk}
 
-Die ${weakInfo.name}-Aspekte sind besonders kritisch in diesem Setting.
+Die ${weakInfo.name}-Aspekte sind kritisch.
 
-Erstelle eine direkte Warnung (2-3 Sätze):
+Erstelle Warnung (2-3 Sätze):
+1. Welche ${weakInfo.name}-Aspekte kritisch sind
+2. Was der ${info.name}-Typ übersieht
+3. Konkrete Handlungsempfehlung
 
-1. Welche ${weakInfo.name}-Aspekte bei dieser Aufgabe im ${settingName} kritisch sind
-2. Was der ${info.name}-Typ im ${settingName} wahrscheinlich übersieht oder unterschätzt
-3. Eine konkrete, setting-spezifische Handlungsempfehlung
-
-Format: "Achtung: Als ${info.name}-Typ im ${settingName} achte besonders auf..."
-
-Schreibe direkt und handlungsorientiert.`;
+Format: "Achtung: Als ${info.name}-Typ im ${settingName}..."`;
 
             try {
                 const response = await fetch('/api/analyze', {
@@ -544,8 +434,8 @@ Schreibe direkt und handlungsorientiert.`;
                 if (!response.ok) throw new Error(`API Error: ${response.status}`);
 
                 const data = await response.json();
-                warningContent.innerHTML = `<p>${data.result}</p>`;
-                warningSection.classList.remove('hidden');
+                document.getElementById('warningContent').innerHTML = `<p class="font-semibold">${data.result}</p>`;
+                document.getElementById('warningSection').classList.remove('hidden');
             } catch (error) {
                 console.error('Warning error:', error);
             }
@@ -554,174 +444,85 @@ Schreibe direkt und handlungsorientiert.`;
         async function generateChecklist(userType, task, setting) {
             const info = typeInfo[userType];
 
-            // Setting-spezifische Fokuspunkte pro Typ
             const settingFocus = {
                 solo: {
-                    d: {
-                        focus: 'Selbstmanagement ohne Burnout',
-                        examples: '• Plane Pufferzeiten: 30% Reserve für Unvorhergesehenes\n• Setze realistische Tages-Ziele (nicht Wochen-Ziele für einen Tag)\n• Definiere "Done" für heute - nicht für die Perfektion\n• Plane aktiv Pausen ein (nicht "wenn Zeit ist")'
-                    },
-                    i: {
-                        focus: 'Disziplin und Fokus bei Alleinarbeit',
-                        examples: '• Nutze Timer/Pomodoro gegen Verzettlung\n• Erstelle morgendliche Prioritätenliste (nur 3 Punkte!)\n• Dokumentiere Entscheidungen schriftlich (nicht nur im Kopf)\n• Setze harte Deadlines für einzelne Tasks'
-                    },
-                    s: {
-                        focus: 'Tempo und Entscheidungsfreude',
-                        examples: '• Setze Entscheidungsdeadlines: Bis [Uhrzeit] muss X geklärt sein\n• Nutze "Good enough"-Kriterien statt Perfektion\n• Plane bewusst "Quick & Dirty"-Phasen\n• Frage: Was ist das Minimum Viable Product?'
-                    },
-                    g: {
-                        focus: 'Pragmatismus über Perfektion',
-                        examples: '• Definiere "80% ist gut genug" für diese Phase\n• Nutze Templates statt alles neu zu bauen\n• Setze Time-Boxing: Max. X Stunden für Recherche\n• Frage: Was würde ein Pragmatiker jetzt tun?'
-                    }
+                    d: { focus: 'Selbstmanagement ohne Burnout', examples: 'Pufferzeiten, realistische Tages-Ziele, Pausen' },
+                    i: { focus: 'Disziplin bei Alleinarbeit', examples: 'Timer/Pomodoro, Prioritätenliste, Dokumentation' },
+                    s: { focus: 'Tempo und Entscheidungsfreude', examples: 'Entscheidungsdeadlines, "Good enough"-Kriterien' },
+                    g: { focus: 'Pragmatismus über Perfektion', examples: '"80% ist gut genug", Templates nutzen, Time-Boxing' }
                 },
                 small_team: {
-                    d: {
-                        focus: 'Team-Harmonie und Akzeptanz',
-                        examples: '• Plane 30min Daily Standup - nicht nur Status-Mail\n• Frage aktiv: "Wie fühlt ihr euch mit dieser Entscheidung?"\n• Hole Konsens bei wichtigen Entscheidungen ein\n• Erkläre das WARUM, nicht nur das WAS'
-                    },
-                    i: {
-                        focus: 'Struktur und klare Zuständigkeiten',
-                        examples: '• Erstelle RACI-Matrix: Wer ist für WAS verantwortlich?\n• Nutze Kanban/Trello für Transparenz\n• Wöchentliches Review: Was haben wir ABGESCHLOSSEN?\n• Definiere klare Deliverables pro Person'
-                    },
-                    s: {
-                        focus: 'Tempo und klare Entscheidungen',
-                        examples: '• Setze Team-Entscheidungsdeadlines (nicht endlos diskutieren)\n• Nutze "Disagree and Commit" bei Unstimmigkeit\n• Plane Speed-Meetings (30min max.)\n• Frage: Was ist heute die eine wichtige Entscheidung?'
-                    },
-                    g: {
-                        focus: 'Vertrauen statt Mikromanagement',
-                        examples: '• Definiere Outcomes, nicht Prozesse\n• Wöchentliches Review reicht (nicht täglich kontrollieren)\n• Gib Autonomie bei der Umsetzung\n• Frage: Welche Kontrolle kann ich loslassen?'
-                    }
+                    d: { focus: 'Team-Harmonie', examples: 'Daily Standups, Konsens einholen, WARUM erklären' },
+                    i: { focus: 'Struktur und Zuständigkeiten', examples: 'RACI-Matrix, Kanban, klare Deliverables' },
+                    s: { focus: 'Tempo und Entscheidungen', examples: 'Entscheidungsdeadlines, "Disagree and Commit"' },
+                    g: { focus: 'Vertrauen statt Mikromanagement', examples: 'Outcomes definieren, Autonomie geben' }
                 },
                 specialists: {
-                    d: {
-                        focus: 'Expertenakzeptanz und Schnittstellen',
-                        examples: '• Plane Alignment-Meetings mit Abteilungsleads\n• Hole Expertenmeinungen VOR finalen Entscheidungen ein\n• Definiere klare Schnittstellen-Regeln\n• Frage: Wen habe ich noch nicht einbezogen?'
-                    },
-                    i: {
-                        focus: 'Vision UND Governance',
-                        examples: '• Erstelle One-Pager zur Vision (nicht nur mündlich)\n• Etabliere Quartals-OKRs über alle Abteilungen\n• Nutze Steering Committee für Governance\n• Plane monatliche Vision-Updates'
-                    },
-                    s: {
-                        focus: 'Schnelle Entscheidungen über Silos hinweg',
-                        examples: '• Definiere Eskalationspfade bei Konflikten\n• Setze Entscheidungsbefugnisse fest (wer darf was?)\n• Plane wöchentliche Cross-functional Syncs\n• Frage: Welche Entscheidung blockiert aktuell?'
-                    },
-                    g: {
-                        focus: 'Big Picture über Reporting-Details',
-                        examples: '• Reduziere Reporting auf Key-Metrics (max. 5)\n• Delegiere Detailkontrolle an Abteilungsleads\n• Fokussiere auf strategische Reviews (monatlich)\n• Frage: Welches Reporting bringt wirklich Mehrwert?'
-                    }
+                    d: { focus: 'Expertenakzeptanz', examples: 'Alignment-Meetings, Expertenmeinungen einholen' },
+                    i: { focus: 'Vision UND Governance', examples: 'Vision One-Pager, Quartals-OKRs, Steering Committee' },
+                    s: { focus: 'Schnelle Entscheidungen über Silos', examples: 'Eskalationspfade, Cross-functional Syncs' },
+                    g: { focus: 'Big Picture über Details', examples: 'Key-Metrics (max. 5), Delegation an Leads' }
                 }
             };
 
             const typeFocus = settingFocus[setting][userType];
-            const settingNames = {
-                solo: 'Solo-Arbeit',
-                small_team: 'Kleinem Team',
-                specialists: 'Spezialisten-Team'
-            };
+            const settingNames = { solo: 'Solo-Arbeit', small_team: 'Kleinem Team', specialists: 'Spezialisten-Team' };
 
-            const prompt = `Du bist ein DISG-Coach. Erstelle eine Setting-spezifische Checkliste für einen ${info.name}-Typ in ${settingNames[setting]}.
+            const prompt = `Erstelle Setting-spezifische Checkliste für ${info.name}-Typ in ${settingNames[setting]}.
 
 AUFGABE: "${task}"
-SETTING: ${settingNames[setting]}
-USER-TYP: ${info.name}
+FOKUS: ${typeFocus.focus}
+BEISPIELE: ${typeFocus.examples}
 
-FOKUS FÜR ${info.name.toUpperCase()} IN ${settingNames[setting].toUpperCase()}:
-${typeFocus.focus}
+6-8 prägnante Bulletpoints, die dieser Typ VERGISST.
+Als Aufforderung oder Frage. Konkret und setting-spezifisch.
 
-BEISPIELE FÜR DIESEN TYP/SETTING:
-${typeFocus.examples}
-
-Erstelle 6-8 prägnante Bulletpoints speziell für ${settingNames[setting]}, die dieser Typ WAHRSCHEINLICH VERGISST.
-
-Formuliere als Aufforderung oder Frage. Konkret und setting-spezifisch.
-
-NUR die Bulletpoints, keine Einleitung.`;
+NUR Bulletpoints, keine Einleitung.`;
 
             try {
-                console.log('Generating checklist for:', userType, setting);
-                
                 const response = await fetch('/api/analyze', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ type: userType, text: prompt })
                 });
 
-                if (!response.ok) {
-                    console.error('API response not ok:', response.status);
-                    throw new Error(`API Error: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`API Error: ${response.status}`);
 
                 const data = await response.json();
-                console.log('Checklist response:', data);
                 
-                if (!data.result) {
-                    console.error('No result in response');
-                    throw new Error('Keine Antwort erhalten');
-                }
-
-                // Sehr robustes Parsing
                 let items = data.result
                     .split('\n')
                     .map(line => line.trim())
                     .filter(line => line.length > 0)
-                    .filter(line => {
-                        return line.startsWith('•') || 
-                               line.startsWith('-') || 
-                               line.startsWith('*') ||
-                               line.startsWith('✓') ||
-                               /^\d+[\.)]\s/.test(line);
-                    })
-                    .map(item => {
-                        return item
-                            .replace(/^[•\-*✓]\s*/, '')
-                            .replace(/^\d+[\.)]\s*/, '')
-                            .trim();
-                    })
+                    .filter(line => line.startsWith('•') || line.startsWith('-') || line.startsWith('*') || /^\d+[\.)]\s/.test(line))
+                    .map(item => item.replace(/^[•\-*]\s*/, '').replace(/^\d+[\.)]\s*/, '').trim())
                     .filter(text => text.length > 10);
 
-                console.log('Parsed items:', items);
-
                 if (items.length === 0) {
-                    items = data.result
-                        .split('\n')
-                        .map(line => line.trim())
-                        .filter(line => line.length > 20 && !line.toLowerCase().includes('checkliste'))
-                        .slice(0, 8);
-                    
-                    console.log('Fallback items:', items);
-                }
-
-                if (items.length === 0) {
-                    checklistContent.innerHTML = '<p class="text-slate-600">Checkliste konnte nicht generiert werden. Bitte versuche es erneut.</p>';
-                    checklistSection.classList.remove('hidden');
-                    return;
+                    items = data.result.split('\n').map(line => line.trim()).filter(line => line.length > 20).slice(0, 8);
                 }
 
                 const formattedItems = items.map(text => {
-                    return `<div class="flex items-start gap-3 p-3 bg-white rounded border border-slate-200 hover:border-slate-300 transition">
+                    return `<div class="flex items-start gap-4 p-4 bg-slate-50 rounded-xl hover:bg-slate-100 transition border border-slate-200">
                         <svg class="w-5 h-5 text-amber-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                         </svg>
-                        <p class="text-slate-700 flex-1">${text}</p>
+                        <p class="text-slate-700 font-medium flex-1">${text}</p>
                     </div>`;
                 }).join('');
                 
-                checklistContent.innerHTML = formattedItems;
-                checklistSection.classList.remove('hidden');
-                
-                console.log('Checklist rendered successfully');
+                document.getElementById('checklistContent').innerHTML = formattedItems;
+                document.getElementById('checklistSection').classList.remove('hidden');
             } catch (error) {
                 console.error('Checklist error:', error);
-                checklistContent.innerHTML = `<p class="text-red-600">Fehler beim Laden der Checkliste: ${error.message}</p>`;
-                checklistSection.classList.remove('hidden');
             }
         }
 
         // Enter to submit
-        taskInput.addEventListener('keydown', (e) => {
+        document.getElementById('taskInput').addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
                 e.preventDefault();
-                analyzeBtn.click();
+                document.getElementById('mainAction').click();
             }
         });
     </script>
