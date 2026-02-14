@@ -448,40 +448,50 @@
             const settingContexts = {
                 solo: {
                     name: 'Solo-Setting',
-                    focus: 'Selbstmanagement, Disziplin, Zeitersparnis',
-                    questions: 'Wie schaffe ich das alleine? Welche Tools/Methoden nutze ich?',
-                    outputFormat: 'Konkrete Tools, Methoden, Zeitmanagement-Strategien'
+                    roleContext: 'Inhaber/Freelancer selbst',
+                    delegation: 'Externe Dienstleister oder Tools'
                 },
                 small_team: {
                     name: 'Kleines Team',
-                    focus: 'Kommunikation, Motivation, klare Zuständigkeiten',
-                    questions: 'Wie sorge ich für Harmonie UND Tempo? Wie bleiben wir fokussiert?',
-                    outputFormat: 'Kommunikationsstrukturen, Meeting-Formate, Aufgabenverteilung'
+                    roleContext: 'Teammitglieder mit klaren Rollen',
+                    delegation: 'Direkte Aufgabenverteilung im Team'
                 },
                 specialists: {
                     name: 'Spezialisten-Team',
-                    focus: 'Delegation, Schnittstellenmanagement, Prozesskontrolle',
-                    questions: 'Wie steuere ich Experten ohne Mikromanagement? Wie halte ich die Vision aufrecht?',
-                    outputFormat: 'Reporting-Strukturen, Meeting-Formate, Governance, OKRs'
+                    roleContext: 'Fachexperten nach Kompetenz',
+                    delegation: 'Delegation an Abteilungsleiter/Experten'
                 }
             };
 
             const settingContext = settingContexts[setting];
             
-            const prompt = `Du bist ein strategischer Unternehmensberater mit DISG-Expertise. Entwickle eine ${info.name}-Strategie für folgende Aufgabe im ${settingContext.name}.
+            const prompt = `Erstelle eine ${info.name}-Strategie für: "${task}" im ${settingContext.name}.
 
-AUFGABE: "${task}"
-SETTING: ${settingContext.name} (${settingContext.focus})
-PERSPEKTIVE: ${info.name} (Stärken: ${info.strengths})
+FORMAT (strikte Einhaltung):
 
-SETTING-KONTEXT: ${settingContext.questions}
+**Kernziel:** [1 prägnanter Satz - Was ist das Hauptziel dieser Perspektive?]
 
-Erstelle eine konkrete Strategie (3-4 Sätze):
-1. WIE ein ${info.name}-Typ diese Aufgabe im ${settingContext.name} angehen würde
-2. WELCHE setting-spezifischen Aspekte UNBEDINGT beachtet werden müssen
-3. KONKRETE erste Schritte mit Fokus auf: ${settingContext.outputFormat}
+**Vorgehensweise:**
+• [Verb] [konkrete Aktion]
+• [Verb] [konkrete Aktion]
+• [Verb] [konkrete Aktion]
+• [Verb] [konkrete Aktion]
 
-Schreibe handlungsorientiert und spezifisch für das ${settingContext.name}.`;
+**Verantwortung:** [Wer übernimmt was? Bei ${settingContext.name}: ${settingContext.roleContext}]
+
+**Key-Check:** [Eine kritische Frage zur Selbstprüfung]
+
+REGELN:
+- KEINE Ich-Form ("Ich würde...")
+- KEINE narrativen Einleitungen
+- NUR operative Handlungsanweisungen
+- Verben am Satzanfang (Erstelle, Prüfe, Definiere, Delegiere, Implementiere, Setze, etc.)
+- KEINE Füllwörter
+- Sachlich wie ein Projektmanager-Assistent
+- Kurz und präzise
+
+PERSPEKTIVE: ${info.name} (${info.strengths})
+SETTING: ${settingContext.name}`;
 
             try {
                 const response = await fetch('/api/analyze', {
@@ -493,7 +503,27 @@ Schreibe handlungsorientiert und spezifisch für das ${settingContext.name}.`;
                 if (!response.ok) throw new Error(`API Error: ${response.status}`);
 
                 const data = await response.json();
-                strategies[type].innerHTML = `<p>${data.result}</p>`;
+                let result = data.result;
+                
+                // Formatiere die Ausgabe mit HTML
+                result = result.replace(/\*\*Kernziel:\*\*/g, '<div class="font-bold text-xs uppercase tracking-wider text-slate-500 mb-2 mt-3">Kernziel</div>');
+                result = result.replace(/\*\*Vorgehensweise:\*\*/g, '<div class="font-bold text-xs uppercase tracking-wider text-slate-500 mb-2 mt-4">Vorgehensweise</div>');
+                result = result.replace(/\*\*Verantwortung:\*\*/g, '<div class="font-bold text-xs uppercase tracking-wider text-slate-500 mb-2 mt-4">Verantwortung</div>');
+                result = result.replace(/\*\*Key-Check:\*\*/g, '<div class="font-bold text-xs uppercase tracking-wider text-slate-500 mb-2 mt-4">Key-Check</div>');
+                
+                // Formatiere Bulletpoints
+                result = result.replace(/^• (.+)$/gm, '<div class="flex items-start gap-2 mb-1"><span class="text-slate-400">→</span><span class="text-sm">$1</span></div>');
+                
+                // Formatiere normale Zeilen
+                result = result.split('\n').map(line => {
+                    line = line.trim();
+                    if (line && !line.includes('<div')) {
+                        return `<p class="text-sm leading-relaxed">${line}</p>`;
+                    }
+                    return line;
+                }).filter(line => line).join('\n');
+                
+                strategies[type].innerHTML = result;
             } catch (error) {
                 strategies[type].innerHTML = '<p class="text-red-600">Fehler bei der Entwicklung.</p>';
                 throw error;
