@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DISG Kommunikations-Analyzer</title>
+    <title>DISG Analyzer - TEST VERSION</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .quadrant {
@@ -30,8 +30,35 @@
         <!-- Header -->
         <div class="text-center mb-8 mt-6">
             <h1 class="text-4xl font-bold text-gray-800 mb-2">DISG Kommunikations-Analyzer</h1>
-            <p class="text-gray-600">Erfahren Sie, wie verschiedene Persönlichkeitstypen auf Ihre Nachricht reagieren würden</p>
-            <p class="text-sm text-purple-600 mt-2">🔒 Sicher • 🚀 Powered by Groq AI</p>
+            <p class="text-gray-600">TEST VERSION - Nur für lokales Testen!</p>
+            <p class="text-sm text-orange-600 mt-2">⚠️ NICHT für Production deployen - API Key ist im Code!</p>
+        </div>
+
+        <!-- API Key Input -->
+        <div class="bg-blue-50 border-l-4 border-blue-400 p-4 mb-6">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="ml-3 flex-1">
+                    <p class="text-sm text-blue-700">
+                        <strong>Groq API Key eingeben:</strong> Hole dir einen kostenlosen Key von 
+                        <a href="https://console.groq.com" target="_blank" class="underline font-semibold">console.groq.com</a>
+                    </p>
+                    <div class="mt-2">
+                        <input 
+                            type="password" 
+                            id="apiKeyInput" 
+                            placeholder="gsk_..." 
+                            value="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"
+                            class="w-full p-2 border border-blue-300 rounded focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none"
+                        >
+                        <p class="text-xs text-blue-600 mt-1">Dein API Key wird nur in diesem Browser gespeichert und nicht an Dritte weitergegeben.</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Input Section -->
@@ -129,6 +156,7 @@
     <script>
         const analyzeBtn = document.getElementById('analyzeBtn');
         const input = document.getElementById('input');
+        const apiKeyInput = document.getElementById('apiKeyInput');
         const results = {
             d: document.getElementById('result-d'),
             i: document.getElementById('result-i'),
@@ -136,11 +164,51 @@
             g: document.getElementById('result-g')
         };
 
+        const typeDescriptions = {
+            d: {
+                name: 'Dominant',
+                traits: 'direkt, ergebnisorientiert, entscheidungsfreudig, ungeduldig',
+                focus: 'Fokus auf Ergebnisse und Kontrolle'
+            },
+            i: {
+                name: 'Initiativ',
+                traits: 'enthusiastisch, kommunikativ, optimistisch, beziehungsorientiert',
+                focus: 'Fokus auf Menschen und positive Energie'
+            },
+            s: {
+                name: 'Stetig',
+                traits: 'geduldig, loyal, kooperativ, harmoniebedürftig',
+                focus: 'Fokus auf Stabilität und Teamarbeit'
+            },
+            g: {
+                name: 'Gewissenhaft',
+                traits: 'analytisch, präzise, detailorientiert, qualitätsbewusst',
+                focus: 'Fokus auf Genauigkeit und Qualität'
+            }
+        };
+
+        // Load saved API key
+        const savedKey = localStorage.getItem('groq_api_key');
+        if (savedKey) {
+            apiKeyInput.value = savedKey;
+        }
+
+        // Save API key on change
+        apiKeyInput.addEventListener('input', (e) => {
+            localStorage.setItem('groq_api_key', e.target.value);
+        });
+
         analyzeBtn.addEventListener('click', async () => {
             const text = input.value.trim();
+            const apiKey = apiKeyInput.value.trim();
             
             if (!text) {
                 alert('Bitte geben Sie eine Nachricht ein.');
+                return;
+            }
+
+            if (!apiKey) {
+                alert('Bitte geben Sie Ihren Groq API Key ein.');
                 return;
             }
 
@@ -157,16 +225,14 @@
             try {
                 // Analyze all 4 types
                 await Promise.all([
-                    analyzeType('d', text),
-                    analyzeType('i', text),
-                    analyzeType('s', text),
-                    analyzeType('g', text)
+                    analyzeType('d', text, apiKey),
+                    analyzeType('i', text, apiKey),
+                    analyzeType('s', text, apiKey),
+                    analyzeType('g', text, apiKey)
                 ]);
             } catch (error) {
                 console.error('Error:', error);
-                Object.values(results).forEach(el => {
-                    el.innerHTML = '<p class="text-red-500">Fehler bei der Analyse. Bitte versuchen Sie es erneut.</p>';
-                });
+                // Errors are already displayed in individual quadrants
             } finally {
                 analyzeBtn.disabled = false;
                 analyzeBtn.textContent = 'Analysieren';
@@ -174,49 +240,60 @@
             }
         });
 
-        async function analyzeType(type, text) {
+        async function analyzeType(type, text, apiKey) {
+            const typeInfo = typeDescriptions[type];
+            
+            const prompt = `Du bist ein DISG-Persönlichkeitsexperte. Analysiere die folgende Nachricht aus der Perspektive eines ${typeInfo.name}-Typs (${typeInfo.traits}).
+
+Nachricht: "${text}"
+
+Schreibe eine kurze, authentische Reaktion (2-4 Sätze), wie eine Person mit ${typeInfo.name}-Persönlichkeit auf diese Nachricht reagieren oder sie interpretieren würde. ${typeInfo.focus}.
+
+Antworte NUR mit der Reaktion, ohne Einleitung oder Erklärung.`;
+
             try {
-                // Ruft die sichere Serverless Function auf
-                // KEIN API Key im Frontend-Code!
-                const response = await fetch('/api/analyze', {
+                console.log(`Analyzing type ${type}...`);
+                
+                const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiKey}`
                     },
                     body: JSON.stringify({
-                        type: type,
-                        text: text
+                        model: 'llama-3.3-70b-versatile',
+                        messages: [
+                            { role: 'user', content: prompt }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 300
                     })
                 });
 
                 if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error(`API Error ${response.status}:`, errorText);
+                    const errorData = await response.text();
+                    console.error(`API Error for type ${type}:`, response.status, errorData);
                     throw new Error(`API Error: ${response.status}`);
                 }
 
                 const data = await response.json();
+                console.log(`Response for type ${type}:`, data);
                 
-                if (data.error) {
-                    console.error('API returned error:', data.error);
-                    throw new Error(data.error);
+                if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+                    throw new Error('Unerwartetes Antwortformat');
                 }
                 
-                if (!data.result) {
-                    console.error('No result in response:', data);
-                    throw new Error('Keine Antwort vom Server');
-                }
+                const result = data.choices[0].message.content;
+                results[type].innerHTML = `<p class="fade-in">${result}</p>`;
                 
-                results[type].innerHTML = `<p class="fade-in">${data.result}</p>`;
             } catch (error) {
-                console.error('Error in analyzeType:', error);
+                console.error(`Error for type ${type}:`, error);
                 
-                // Spezifische Fehlermeldungen
                 let errorMessage = 'Fehler bei der Generierung.';
-                if (error.message.includes('404')) {
-                    errorMessage = 'API nicht gefunden. Bitte stellen Sie sicher, dass die Serverless Function deployed ist.';
-                } else if (error.message.includes('500')) {
-                    errorMessage = 'Server-Fehler. Bitte überprüfen Sie die API Key Konfiguration in Vercel.';
+                if (error.message.includes('401')) {
+                    errorMessage = 'API Key ungültig. Bitte überprüfen Sie Ihren Groq API Key.';
+                } else if (error.message.includes('429')) {
+                    errorMessage = 'Rate Limit erreicht. Bitte warten Sie einen Moment.';
                 } else if (error.message.includes('Failed to fetch')) {
                     errorMessage = 'Netzwerkfehler. Bitte überprüfen Sie Ihre Internetverbindung.';
                 }
@@ -226,7 +303,7 @@
             }
         }
 
-        // Allow Enter to submit (with Shift+Enter for new line)
+        // Allow Enter to submit
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
