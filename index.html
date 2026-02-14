@@ -3,7 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>myLurch – Strategischer Perspektivwechsel</title>
+    
+    <!-- SEO Meta Tags -->
+    <title>myLurch – Strategische Planung durch DISG-Perspektivwechsel | Business Tool</title>
+    <meta name="description" content="Entwickeln Sie ganzheitliche Strategien durch DISG-Perspektivwechsel. KI-gestütztes Business-Tool für Führungskräfte zur Vermeidung blinder Flecken in der Projektplanung.">
+    <meta name="keywords" content="DISG, Strategieplanung, Perspektivwechsel, Business Tool, Führungskräfte, KI-Analyse, Projektmanagement, Blind Spots">
+    <meta name="author" content="Olaf Mergili">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="de">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mylurch.com/">
+    <meta property="og:title" content="myLurch – Strategische Planung durch DISG-Perspektivwechsel">
+    <meta property="og:description" content="KI-gestütztes Business-Tool für ganzheitliche Strategieentwicklung. Vermeiden Sie blinde Flecken durch systematischen DISG-Perspektivwechsel.">
+    <meta property="og:image" content="https://mylurch.com/og-image.jpg">
+    <meta property="og:locale" content="de_DE">
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="https://mylurch.com/">
+    <meta name="twitter:title" content="myLurch – Strategische Planung durch DISG-Perspektivwechsel">
+    <meta name="twitter:description" content="KI-gestütztes Business-Tool für ganzheitliche Strategieentwicklung durch DISG-Perspektivwechsel.">
+    <meta name="twitter:image" content="https://mylurch.com/og-image.jpg">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="alternate icon" href="favicon.ico">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://mylurch.com/">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
@@ -13,6 +48,51 @@
         .input-focus:focus { border-color: #1e293b; ring: 4px; ring-color: #e2e8f0; }
         html { scroll-behavior: smooth; }
     </style>
+    
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "myLurch",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "EUR"
+      },
+      "description": "KI-gestütztes Business-Tool für strategische Planung durch DISG-Perspektivwechsel. Entwickeln Sie ganzheitliche Strategien und vermeiden Sie blinde Flecken.",
+      "author": {
+        "@type": "Person",
+        "name": "Olaf Mergili",
+        "email": "info@mergili.de"
+      },
+      "provider": {
+        "@type": "Person",
+        "name": "Olaf Mergili",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Neuwangerooger Str. 2",
+          "addressLocality": "Varel",
+          "postalCode": "26316",
+          "addressCountry": "DE"
+        }
+      },
+      "audience": {
+        "@type": "BusinessAudience",
+        "audienceType": "Führungskräfte, Projektmanager, Unternehmer"
+      },
+      "featureList": [
+        "DISG-Strategieanalyse",
+        "Perspektivwechsel",
+        "Blind-Spot-Erkennung",
+        "Setting-spezifische Checklisten",
+        "KI-gestützte Analyse"
+      ],
+      "screenshot": "https://mylurch.com/screenshot.jpg"
+    }
+    </script>
 </head>
 <body class="bg-slate-50 text-slate-900">
 
@@ -228,12 +308,12 @@
             <div class="flex justify-center gap-6 text-xs">
                 <a href="impressum.html" class="hover:text-slate-900 transition">Impressum & Datenschutz</a>
                 <span>•</span>
-                <a href="mailto:info@mergili.de" class="hover:text-slate-900 transition">Kontakt</a>
+                <a href="/cdn-cgi/l/email-protection#20494e464f604d455247494c490e4445" class="hover:text-slate-900 transition">Kontakt</a>
             </div>
         </div>
     </footer>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         let currentType = null;
 
         const strategies = {
@@ -531,10 +611,4 @@ NUR Bulletpoints, keine Einleitung.`;
         // Enter to submit
         document.getElementById('taskInput').addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-                e.preventDefault();
-                document.getElementById('mainAction').click();
-            }
-        });
-    </script>
-</body>
-</html>
+         
