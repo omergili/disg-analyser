@@ -312,137 +312,102 @@
     </footer>
 
     <script>
-        console.log('Script startet...');
-        
         let currentType = null;
 
-        // Warte bis DOM geladen ist
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOM geladen');
-            
-            const strategies = {
-                d: document.getElementById('strategy-d'),
-                i: document.getElementById('strategy-i'),
-                s: document.getElementById('strategy-s'),
-                g: document.getElementById('strategy-g')
-            };
-            
-            console.log('Strategies:', strategies);
+        const strategies = {
+            d: document.getElementById('strategy-d'),
+            i: document.getElementById('strategy-i'),
+            s: document.getElementById('strategy-s'),
+            g: document.getElementById('strategy-g')
+        };
 
-            const typeInfo = {
-                d: {
-                    name: 'Dominant',
-                    strengths: 'Schnelle Entscheidungen, Ergebnisorientierung, Direktheit',
-                    blindSpots: 'Details, Prozesse, Menschen-Aspekte'
-                },
-                i: {
-                    name: 'Initiativ',
-                    strengths: 'Begeisterung, Kreativität, Netzwerke, Teambuilding',
-                    blindSpots: 'Details, Struktur, Follow-through'
-                },
-                s: {
-                    name: 'Stetig',
-                    strengths: 'Stabilität, Prozesstreue, Teamharmonie, Verlässlichkeit',
-                    blindSpots: 'Geschwindigkeit, Innovation, Risikobereitschaft'
-                },
-                g: {
-                    name: 'Gewissenhaft',
-                    strengths: 'Qualität, Analyse, Risikomanagement, Standards',
-                    blindSpots: 'Geschwindigkeit, Pragmatismus, Beziehungen'
-                }
-            };
+        const typeInfo = {
+            d: {
+                name: 'Dominant',
+                strengths: 'Schnelle Entscheidungen, Ergebnisorientierung, Direktheit',
+                blindSpots: 'Details, Prozesse, Menschen-Aspekte'
+            },
+            i: {
+                name: 'Initiativ',
+                strengths: 'Begeisterung, Kreativität, Netzwerke, Teambuilding',
+                blindSpots: 'Details, Struktur, Follow-through'
+            },
+            s: {
+                name: 'Stetig',
+                strengths: 'Stabilität, Prozesstreue, Teamharmonie, Verlässlichkeit',
+                blindSpots: 'Geschwindigkeit, Innovation, Risikobereitschaft'
+            },
+            g: {
+                name: 'Gewissenhaft',
+                strengths: 'Qualität, Analyse, Risikomanagement, Standards',
+                blindSpots: 'Geschwindigkeit, Pragmatismus, Beziehungen'
+            }
+        };
 
-            // Type Selection
-            document.querySelectorAll('.type-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    currentType = this.dataset.type;
-                    console.log('Typ gewählt:', currentType);
-                    document.querySelectorAll('.type-btn').forEach(b => {
-                        b.classList.remove('border-amber-500', 'bg-amber-50');
-                    });
-                    this.classList.add('border-amber-500', 'bg-amber-50');
+        // Type Selection
+        document.querySelectorAll('.type-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                currentType = this.dataset.type;
+                document.querySelectorAll('.type-btn').forEach(b => {
+                    b.classList.remove('border-amber-500', 'bg-amber-50');
                 });
+                this.classList.add('border-amber-500', 'bg-amber-50');
             });
+        });
 
-            // Main Action Button
-            const mainButton = document.getElementById('mainAction');
-            console.log('Main Button:', mainButton);
+        // Main Action
+        document.getElementById('mainAction').addEventListener('click', async () => {
+            const task = document.getElementById('taskInput').value.trim();
+            const setting = document.getElementById('settingSelect').value;
             
-            if (!mainButton) {
-                console.error('Button nicht gefunden!');
+            if (!task) {
+                alert('Bitte Aufgabe oder Ziel eingeben.');
                 return;
             }
-            
-            mainButton.addEventListener('click', async () => {
-                console.log('Button geklickt!');
-                
-                const task = document.getElementById('taskInput').value.trim();
-                const setting = document.getElementById('settingSelect').value;
-                
-                console.log('Task:', task);
-                console.log('Setting:', setting);
-                console.log('CurrentType:', currentType);
-                
-                if (!task) {
-                    alert('Bitte Aufgabe oder Ziel eingeben.');
-                    return;
-                }
 
-                if (!currentType) {
-                    alert('Bitte eigenen Typ auswählen.');
-                    return;
-                }
+            if (!currentType) {
+                alert('Bitte eigenen Typ auswählen.');
+                return;
+            }
 
-                const btn = document.getElementById('mainAction');
-                btn.textContent = 'Entwickelt Strategien...';
-                btn.disabled = true;
+            const btn = document.getElementById('mainAction');
+            btn.textContent = 'Entwickelt Strategien...';
+            btn.disabled = true;
 
-                const warningSection = document.getElementById('warningSection');
-                const checklistSection = document.getElementById('checklistSection');
-                
-                if (warningSection) warningSection.classList.add('hidden');
-                if (checklistSection) checklistSection.classList.add('hidden');
+            document.getElementById('warningSection').classList.add('hidden');
+            document.getElementById('checklistSection').classList.add('hidden');
 
-                Object.values(strategies).forEach(el => {
-                    if (el) el.innerHTML = '<p class="text-slate-400 italic">Wird entwickelt...</p>';
-                });
-
-                try {
-                    console.log('Starte Strategieentwicklung...');
-                    
-                    await Promise.all([
-                        developStrategy('d', task, setting, strategies, typeInfo),
-                        developStrategy('i', task, setting, strategies, typeInfo),
-                        developStrategy('s', task, setting, strategies, typeInfo),
-                        developStrategy('g', task, setting, strategies, typeInfo)
-                    ]);
-
-                    console.log('Strategien fertig, generiere Warning...');
-                    await generateWarning(currentType, task, setting, typeInfo);
-                    
-                    console.log('Warning fertig, generiere Checklist...');
-                    await generateChecklist(currentType, task, setting, typeInfo);
-
-                    document.getElementById('strategiesArea').classList.remove('hidden');
-                    document.getElementById('personalArea').classList.remove('hidden');
-
-                    setTimeout(() => {
-                        const warningEl = document.getElementById('warningSection');
-                        if (warningEl) {
-                            warningEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                        }
-                    }, 500);
-
-                } catch (error) {
-                    console.error('Fehler:', error);
-                    alert('Ein Fehler ist aufgetreten. Bitte prüfen Sie die Console (F12).');
-                } finally {
-                    btn.disabled = false;
-                    btn.textContent = 'Strategien entwickeln';
-                }
+            Object.values(strategies).forEach(el => {
+                el.innerHTML = '<p class="text-slate-400 italic">Wird entwickelt...</p>';
             });
 
-            async function developStrategy(type, task, setting, strategies, typeInfo) {
+            try {
+                await Promise.all([
+                    developStrategy('d', task, setting),
+                    developStrategy('i', task, setting),
+                    developStrategy('s', task, setting),
+                    developStrategy('g', task, setting)
+                ]);
+
+                await generateWarning(currentType, task, setting);
+                await generateChecklist(currentType, task, setting);
+
+                document.getElementById('strategiesArea').classList.remove('hidden');
+                document.getElementById('personalArea').classList.remove('hidden');
+
+                setTimeout(() => {
+                    document.getElementById('warningSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 500);
+
+            } catch (error) {
+                console.error('Fehler:', error);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Strategien entwickeln';
+            }
+        });
+
+        async function developStrategy(type, task, setting) {
             const info = typeInfo[type];
             
             const settingContexts = {
@@ -500,7 +465,7 @@ Schreibe handlungsorientiert und spezifisch für das ${settingContext.name}.`;
             }
         }
 
-            async function generateWarning(userType, task, setting, typeInfo) {
+        async function generateWarning(userType, task, setting) {
             const info = typeInfo[userType];
             const complementary = { 'd': 's', 'i': 'g', 's': 'd', 'g': 'i' };
             const weakType = complementary[userType];
@@ -564,7 +529,7 @@ Format: "Achtung: Als ${info.name}-Typ im ${settingName}..."`;
             }
         }
 
-            async function generateChecklist(userType, task, setting, typeInfo) {
+        async function generateChecklist(userType, task, setting) {
             const info = typeInfo[userType];
 
             const settingFocus = {
@@ -641,19 +606,7 @@ NUR Bulletpoints, keine Einleitung.`;
             }
         }
 
-            // Enter to submit
-            const taskInputEl = document.getElementById('taskInput');
-            if (taskInputEl) {
-                taskInputEl.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-                        e.preventDefault();
-                        document.getElementById('mainAction').click();
-                    }
-                });
-            }
-            
-            console.log('Event Listeners registriert!');
-        }); // Ende DOMContentLoaded
-    </script>
-</body>
-</html>
+        // Enter to submit
+        document.getElementById('taskInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+         
