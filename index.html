@@ -109,6 +109,36 @@
                     </label>
                 </div>
             </div>
+
+            <!-- Setting Selection -->
+            <div class="mt-6 mb-6">
+                <label class="block text-lg font-semibold text-slate-900 mb-3">
+                    In welchem Setting arbeitest du?
+                </label>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <label class="flex items-start p-4 border-2 border-slate-200 rounded-lg cursor-pointer hover:border-slate-400 transition">
+                        <input type="radio" name="setting" value="solo" class="type-selector w-4 h-4 text-slate-900 mr-3 mt-1">
+                        <div>
+                            <div class="font-semibold text-slate-900">Solo</div>
+                            <div class="text-xs text-slate-600">Alleine, Selbstmanagement</div>
+                        </div>
+                    </label>
+                    <label class="flex items-start p-4 border-2 border-slate-200 rounded-lg cursor-pointer hover:border-slate-400 transition">
+                        <input type="radio" name="setting" value="small_team" class="type-selector w-4 h-4 text-slate-900 mr-3 mt-1">
+                        <div>
+                            <div class="font-semibold text-slate-900">Kleines Team</div>
+                            <div class="text-xs text-slate-600">3-8 Personen, direkte Zusammenarbeit</div>
+                        </div>
+                    </label>
+                    <label class="flex items-start p-4 border-2 border-slate-200 rounded-lg cursor-pointer hover:border-slate-400 transition">
+                        <input type="radio" name="setting" value="specialists" class="type-selector w-4 h-4 text-slate-900 mr-3 mt-1">
+                        <div>
+                            <div class="font-semibold text-slate-900">Spezialisten-Team</div>
+                            <div class="text-xs text-slate-600">Experten, Delegation, Schnittstellen</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
             
             <button 
                 id="analyzeBtn"
@@ -329,6 +359,7 @@
         analyzeBtn.addEventListener('click', async () => {
             const task = taskInput.value.trim();
             const userType = document.querySelector('input[name="userType"]:checked');
+            const setting = document.querySelector('input[name="setting"]:checked');
             
             if (!task) {
                 alert('Bitte Aufgabe oder Ziel eingeben.');
@@ -337,6 +368,11 @@
 
             if (!userType) {
                 alert('Bitte eigenen Typ auswählen.');
+                return;
+            }
+
+            if (!setting) {
+                alert('Bitte Setting auswählen.');
                 return;
             }
 
@@ -353,15 +389,15 @@
             try {
                 // Strategien parallel entwickeln
                 await Promise.all([
-                    developStrategy('d', task),
-                    developStrategy('i', task),
-                    developStrategy('s', task),
-                    developStrategy('g', task)
+                    developStrategy('d', task, setting.value),
+                    developStrategy('i', task, setting.value),
+                    developStrategy('s', task, setting.value),
+                    developStrategy('g', task, setting.value)
                 ]);
 
                 // Warning und Checklist generieren
-                await generateWarning(userType.value, task);
-                await generateChecklist(userType.value, task);
+                await generateWarning(userType.value, task, setting.value);
+                await generateChecklist(userType.value, task, setting.value);
 
                 // Scroll zu Warning
                 setTimeout(() => {
@@ -376,22 +412,49 @@
             }
         });
 
-        async function developStrategy(type, task) {
+        async function developStrategy(type, task, setting) {
             const info = typeInfo[type];
             
-            const prompt = `Du bist ein strategischer Unternehmensberater mit DISG-Expertise. Entwickle eine ${info.name}-Strategie für folgende Aufgabe:
+            // Setting-spezifische Kontexte
+            const settingContexts = {
+                solo: {
+                    name: 'Solo-Setting',
+                    focus: 'Selbstmanagement, Disziplin, Zeitersparnis, Effizienz',
+                    questions: 'Wie schaffe ich das alleine? Welche Tools/Methoden nutze ich? Wie vermeide ich Verzettlung/Burnout?',
+                    outputFormat: 'Konkrete Tools, Methoden, Zeitmanagement-Strategien, Selbstorganisations-Techniken'
+                },
+                small_team: {
+                    name: 'Kleines Team',
+                    focus: 'Kommunikation, Motivation, klare Zuständigkeiten, Teamharmonie',
+                    questions: 'Wie sorge ich für Harmonie UND Tempo? Wie vermeide ich, dass alle alles machen? Wie bleiben wir fokussiert?',
+                    outputFormat: 'Kommunikationsstrukturen, Meeting-Formate, Aufgabenverteilung, Motivations-Methoden'
+                },
+                specialists: {
+                    name: 'Spezialisten-Team',
+                    focus: 'Delegation, Schnittstellenmanagement, Prozesskontrolle, Vision über Abteilungen',
+                    questions: 'Wie steuere ich Experten ohne Mikromanagement? Wie halte ich die Vision aufrecht? Wie manage ich Schnittstellen?',
+                    outputFormat: 'Reporting-Strukturen, Meeting-Formate, Governance, Delegations-Frameworks, OKRs/KPIs'
+                }
+            };
+
+            const settingContext = settingContexts[setting];
+            
+            const prompt = `Du bist ein strategischer Unternehmensberater mit DISG-Expertise. Entwickle eine ${info.name}-Strategie für folgende Aufgabe im ${settingContext.name}.
 
 AUFGABE: "${task}"
-
+SETTING: ${settingContext.name} (${settingContext.focus})
 PERSPEKTIVE: ${info.name} (Stärken: ${info.strengths})
+
+SETTING-KONTEXT:
+${settingContext.questions}
 
 Erstelle eine konkrete Strategie (3-4 Sätze), die zeigt:
 
-1. WIE ein ${info.name}-Typ diese Aufgabe angehen würde
-2. WELCHE Aspekte aus dieser Sicht UNBEDINGT beachtet werden müssen
-3. KONKRETE erste Schritte, die dieser Typ setzen würde
+1. WIE ein ${info.name}-Typ diese Aufgabe im ${settingContext.name} angehen würde
+2. WELCHE setting-spezifischen Aspekte aus dieser Sicht UNBEDINGT beachtet werden müssen
+3. KONKRETE erste Schritte mit Fokus auf: ${settingContext.outputFormat}
 
-Schreibe handlungsorientiert und spezifisch. Keine Theorie, sondern konkrete Vorgehensweise.`;
+Schreibe handlungsorientiert und spezifisch für das ${settingContext.name}. Keine Theorie, sondern konkrete Vorgehensweise.`;
 
             try {
                 const response = await fetch('/api/analyze', {
@@ -410,7 +473,7 @@ Schreibe handlungsorientiert und spezifisch. Keine Theorie, sondern konkrete Vor
             }
         }
 
-        async function generateWarning(userType, task) {
+        async function generateWarning(userType, task, setting) {
             const info = typeInfo[userType];
             const complementary = {
                 'd': 's',
@@ -421,18 +484,53 @@ Schreibe handlungsorientiert und spezifisch. Keine Theorie, sondern konkrete Vor
             const weakType = complementary[userType];
             const weakInfo = typeInfo[weakType];
 
-            const prompt = `Du bist ein DISG-Coach. Erstelle eine präzise Warnung für einen ${info.name}-Typ.
+            // Setting-spezifische Risiken
+            const settingRisks = {
+                solo: {
+                    d: 'Zu schnell vorpreschen ohne ausreichende Planung. Burnout durch Überarbeitung. Keine Pufferzeit für Unvorhergesehenes.',
+                    i: 'Verzettlung durch zu viele Ideen. Fehlende Disziplin bei Alleinarbeit. Unterschätzung des Zeitaufwands.',
+                    s: 'Zu langsames Tempo aus Angst vor Fehlern. Perfektionismus führt zu Stagnation. Fehlende Selbstmotivation.',
+                    g: 'Verlieren im Detail-Dschungel. Perfektion verhindert Fortschritt. Keine pragmatischen Kompromisse.'
+                },
+                small_team: {
+                    d: 'Team überrollen statt mitnehmen. Keine Zeit für Konsens. Harmonie wird geopfert für Geschwindigkeit.',
+                    i: 'Alle machen alles - keine klaren Zuständigkeiten. Viel Begeisterung, wenig Struktur. Follow-through fehlt.',
+                    s: 'Zu viel Harmonie, zu wenig Tempo. Konflikte werden vermieden. Keine klaren Entscheidungen aus Angst vor Unmut.',
+                    g: 'Mikromanagement statt Vertrauen. Zu viele Prozesse für kleines Team. Team fühlt sich gegängelt.'
+                },
+                specialists: {
+                    d: 'Experten werden übergangen. Keine Akzeptanz für Top-Down-Entscheidungen. Schnittstellen werden ignoriert.',
+                    i: 'Vision bleibt vage. Begeisterung ersetzt nicht Governance. Fachexperten werden nicht ernst genommen.',
+                    s: 'Zu langsame Entscheidungsfindung über Abteilungen. Konflikte an Schnittstellen werden verschleppt. Keine klare Führung.',
+                    g: 'Mikromanagement von Experten. Details über Big Picture. Reporting-Overhead lähmt das Team.'
+                }
+            };
+
+            const settingNames = {
+                solo: 'Solo-Arbeit',
+                small_team: 'Kleinem Team',
+                specialists: 'Spezialisten-Team'
+            };
+
+            const risk = settingRisks[setting][userType];
+            const settingName = settingNames[setting];
+
+            const prompt = `Du bist ein DISG-Coach. Erstelle eine direkte, präzise Warnung für einen ${info.name}-Typ im ${settingName}.
 
 AUFGABE: "${task}"
-USER-TYP: ${info.name} (Typische Blindspots: ${info.blindSpots})
+SETTING: ${settingName}
+USER-TYP: ${info.name}
+TYPISCHE RISIKEN IM ${settingName.toUpperCase()}: ${risk}
 
-Erstelle eine direkte, hilfreiche Warnung (2-3 Sätze):
+Die ${weakInfo.name}-Aspekte sind besonders kritisch in diesem Setting.
 
-1. Welche ${weakInfo.name}-Aspekte bei dieser Aufgabe kritisch sind
-2. Was der ${info.name}-Typ wahrscheinlich übersieht oder unterschätzt
-3. Eine konkrete Handlungsempfehlung
+Erstelle eine direkte Warnung (2-3 Sätze):
 
-Format: "Achtung: Als ${info.name}-Typ achte bei dieser Aufgabe besonders auf..."
+1. Welche ${weakInfo.name}-Aspekte bei dieser Aufgabe im ${settingName} kritisch sind
+2. Was der ${info.name}-Typ im ${settingName} wahrscheinlich übersieht oder unterschätzt
+3. Eine konkrete, setting-spezifische Handlungsempfehlung
+
+Format: "Achtung: Als ${info.name}-Typ im ${settingName} achte besonders auf..."
 
 Schreibe direkt und handlungsorientiert.`;
 
@@ -453,64 +551,94 @@ Schreibe direkt und handlungsorientiert.`;
             }
         }
 
-        async function generateChecklist(userType, task) {
+        async function generateChecklist(userType, task, setting) {
             const info = typeInfo[userType];
 
-            // Typ-spezifische Fokuspunkte
-            const focusAreas = {
-                d: {
-                    focus: 'Zwischenmenschliche Aspekte, Akzeptanz und emotionale Faktoren',
-                    details: `Als D-Typ neigst du dazu, den Menschen-Faktor zu unterschätzen. Fokussiere auf:
-- Zwischenmenschliche Bedürfnisse im Team (Wer braucht Unterstützung?)
-- Akzeptanz der Beteiligten (Sind alle wirklich an Bord?)
-- Pufferzeiten (Nicht alles läuft wie geplant)
-- Emotionale Auswirkungen (Wie fühlen sich die Betroffenen?)`
+            // Setting-spezifische Fokuspunkte pro Typ
+            const settingFocus = {
+                solo: {
+                    d: {
+                        focus: 'Selbstmanagement ohne Burnout',
+                        examples: '• Plane Pufferzeiten: 30% Reserve für Unvorhergesehenes\n• Setze realistische Tages-Ziele (nicht Wochen-Ziele für einen Tag)\n• Definiere "Done" für heute - nicht für die Perfektion\n• Plane aktiv Pausen ein (nicht "wenn Zeit ist")'
+                    },
+                    i: {
+                        focus: 'Disziplin und Fokus bei Alleinarbeit',
+                        examples: '• Nutze Timer/Pomodoro gegen Verzettlung\n• Erstelle morgendliche Prioritätenliste (nur 3 Punkte!)\n• Dokumentiere Entscheidungen schriftlich (nicht nur im Kopf)\n• Setze harte Deadlines für einzelne Tasks'
+                    },
+                    s: {
+                        focus: 'Tempo und Entscheidungsfreude',
+                        examples: '• Setze Entscheidungsdeadlines: Bis [Uhrzeit] muss X geklärt sein\n• Nutze "Good enough"-Kriterien statt Perfektion\n• Plane bewusst "Quick & Dirty"-Phasen\n• Frage: Was ist das Minimum Viable Product?'
+                    },
+                    g: {
+                        focus: 'Pragmatismus über Perfektion',
+                        examples: '• Definiere "80% ist gut genug" für diese Phase\n• Nutze Templates statt alles neu zu bauen\n• Setze Time-Boxing: Max. X Stunden für Recherche\n• Frage: Was würde ein Pragmatiker jetzt tun?'
+                    }
                 },
-                i: {
-                    focus: 'Details, rechtliche Aspekte, Dokumentation und Kosten',
-                    details: `Als I-Typ neigst du dazu, Details und Strukturen zu übersehen. Fokussiere auf:
-- Fehlende Detailtiefe (Konkrete Zahlen, Daten, Fakten)
-- Rechtliche Fallstricke (Compliance, Verträge, Haftung)
-- Dokumentationspflichten (Was muss schriftlich festgehalten werden?)
-- Langfristige Kosten-Nutzen-Analysen (ROI über Begeisterung hinaus)`
+                small_team: {
+                    d: {
+                        focus: 'Team-Harmonie und Akzeptanz',
+                        examples: '• Plane 30min Daily Standup - nicht nur Status-Mail\n• Frage aktiv: "Wie fühlt ihr euch mit dieser Entscheidung?"\n• Hole Konsens bei wichtigen Entscheidungen ein\n• Erkläre das WARUM, nicht nur das WAS'
+                    },
+                    i: {
+                        focus: 'Struktur und klare Zuständigkeiten',
+                        examples: '• Erstelle RACI-Matrix: Wer ist für WAS verantwortlich?\n• Nutze Kanban/Trello für Transparenz\n• Wöchentliches Review: Was haben wir ABGESCHLOSSEN?\n• Definiere klare Deliverables pro Person'
+                    },
+                    s: {
+                        focus: 'Tempo und klare Entscheidungen',
+                        examples: '• Setze Team-Entscheidungsdeadlines (nicht endlos diskutieren)\n• Nutze "Disagree and Commit" bei Unstimmigkeit\n• Plane Speed-Meetings (30min max.)\n• Frage: Was ist heute die eine wichtige Entscheidung?'
+                    },
+                    g: {
+                        focus: 'Vertrauen statt Mikromanagement',
+                        examples: '• Definiere Outcomes, nicht Prozesse\n• Wöchentliches Review reicht (nicht täglich kontrollieren)\n• Gib Autonomie bei der Umsetzung\n• Frage: Welche Kontrolle kann ich loslassen?'
+                    }
                 },
-                s: {
-                    focus: 'Entscheidungsgeschwindigkeit, klare Ziele und Kursänderungen',
-                    details: `Als S-Typ neigst du dazu, zu lange abzuwarten und dich zu verzetteln. Fokussiere auf:
-- Notwendige Entscheidungsgeschwindigkeit (Wann ist "jetzt" der richtige Zeitpunkt?)
-- Klare Zielvorgaben gegen Verzettelung (Was ist das Hauptziel, was ist nice-to-have?)
-- Mut zur unpopulären Kurskorrektur (Auch wenn es unbequem ist)
-- Prioritäten setzen statt "allen gerecht werden"`
-                },
-                g: {
-                    focus: 'Pragmatismus, Team-Begeisterung und Big Picture',
-                    details: `Als G-Typ neigst du dazu, dich in Details zu verlieren. Fokussiere auf:
-- Pragmatismus: "Done is better than perfect" (Wann ist gut genug?)
-- Begeisterung des Teams (Menschen brauchen mehr als Fakten)
-- Das "Big Picture" hinter den Daten (Wozu dient das alles?)
-- Geschwindigkeit über Perfektion`
+                specialists: {
+                    d: {
+                        focus: 'Expertenakzeptanz und Schnittstellen',
+                        examples: '• Plane Alignment-Meetings mit Abteilungsleads\n• Hole Expertenmeinungen VOR finalen Entscheidungen ein\n• Definiere klare Schnittstellen-Regeln\n• Frage: Wen habe ich noch nicht einbezogen?'
+                    },
+                    i: {
+                        focus: 'Vision UND Governance',
+                        examples: '• Erstelle One-Pager zur Vision (nicht nur mündlich)\n• Etabliere Quartals-OKRs über alle Abteilungen\n• Nutze Steering Committee für Governance\n• Plane monatliche Vision-Updates'
+                    },
+                    s: {
+                        focus: 'Schnelle Entscheidungen über Silos hinweg',
+                        examples: '• Definiere Eskalationspfade bei Konflikten\n• Setze Entscheidungsbefugnisse fest (wer darf was?)\n• Plane wöchentliche Cross-functional Syncs\n• Frage: Welche Entscheidung blockiert aktuell?'
+                    },
+                    g: {
+                        focus: 'Big Picture über Reporting-Details',
+                        examples: '• Reduziere Reporting auf Key-Metrics (max. 5)\n• Delegiere Detailkontrolle an Abteilungsleads\n• Fokussiere auf strategische Reviews (monatlich)\n• Frage: Welches Reporting bringt wirklich Mehrwert?'
+                    }
                 }
             };
 
-            const typeFocus = focusAreas[userType];
+            const typeFocus = settingFocus[setting][userType];
+            const settingNames = {
+                solo: 'Solo-Arbeit',
+                small_team: 'Kleinem Team',
+                specialists: 'Spezialisten-Team'
+            };
 
-            const prompt = `Du bist ein DISG-Coach. Erstelle eine Checkliste für einen ${info.name}-Typ bei folgender Aufgabe: "${task}"
+            const prompt = `Du bist ein DISG-Coach. Erstelle eine Setting-spezifische Checkliste für einen ${info.name}-Typ in ${settingNames[setting]}.
 
-FOKUS: ${typeFocus.focus}
-${typeFocus.details}
+AUFGABE: "${task}"
+SETTING: ${settingNames[setting]}
+USER-TYP: ${info.name}
 
-Erstelle 6-8 prägnante Bulletpoints, die dieser Typ WAHRSCHEINLICH VERGISST. Jeder Punkt als Aufforderung oder Frage formuliert.
+FOKUS FÜR ${info.name.toUpperCase()} IN ${settingNames[setting].toUpperCase()}:
+${typeFocus.focus}
 
-FORMAT:
-• Definiere [X] BEVOR du [Y]
-• Plane explizit [Zeit] für [Aspekt]
-• Frage: [Konkrete Reflexionsfrage]
-• Setze eine Deadline für [Entscheidung]
+BEISPIELE FÜR DIESEN TYP/SETTING:
+${typeFocus.examples}
+
+Erstelle 6-8 prägnante Bulletpoints speziell für ${settingNames[setting]}, die dieser Typ WAHRSCHEINLICH VERGISST.
+
+Formuliere als Aufforderung oder Frage. Konkret und setting-spezifisch.
 
 NUR die Bulletpoints, keine Einleitung.`;
 
             try {
-                console.log('Generating checklist for type:', userType);
+                console.log('Generating checklist for:', userType, setting);
                 
                 const response = await fetch('/api/analyze', {
                     method: 'POST',
@@ -537,7 +665,6 @@ NUR die Bulletpoints, keine Einleitung.`;
                     .map(line => line.trim())
                     .filter(line => line.length > 0)
                     .filter(line => {
-                        // Akzeptiere Zeilen die mit Bullet, Dash oder Nummer starten
                         return line.startsWith('•') || 
                                line.startsWith('-') || 
                                line.startsWith('*') ||
@@ -545,18 +672,16 @@ NUR die Bulletpoints, keine Einleitung.`;
                                /^\d+[\.)]\s/.test(line);
                     })
                     .map(item => {
-                        // Entferne alle Präfixe
                         return item
                             .replace(/^[•\-*✓]\s*/, '')
                             .replace(/^\d+[\.)]\s*/, '')
                             .trim();
                     })
-                    .filter(text => text.length > 10); // Mindestlänge
+                    .filter(text => text.length > 10);
 
                 console.log('Parsed items:', items);
 
                 if (items.length === 0) {
-                    // Fallback: Nimm alle Zeilen die lang genug sind
                     items = data.result
                         .split('\n')
                         .map(line => line.trim())
@@ -572,7 +697,6 @@ NUR die Bulletpoints, keine Einleitung.`;
                     return;
                 }
 
-                // Erstelle HTML mit Icons
                 const formattedItems = items.map(text => {
                     return `<div class="flex items-start gap-3 p-3 bg-white rounded border border-slate-200 hover:border-slate-300 transition">
                         <svg class="w-5 h-5 text-amber-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
