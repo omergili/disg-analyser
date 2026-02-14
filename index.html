@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DISG Kommunikations-Analyzer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .quadrant {
+            transition: all 0.3s ease;
+        }
+        .quadrant:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+        .loading {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen p-4">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-8 mt-6">
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">DISG Kommunikations-Analyzer</h1>
+            <p class="text-gray-600">Erfahren Sie, wie verschiedene Persönlichkeitstypen auf Ihre Nachricht reagieren würden</p>
+            <p class="text-sm text-purple-600 mt-2">🔒 Sicher • 🚀 Powered by Groq AI</p>
+        </div>
+
+        <!-- Input Section -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <label for="input" class="block text-lg font-semibold text-gray-700 mb-3">
+                Geben Sie Ihre Nachricht ein:
+            </label>
+            <textarea 
+                id="input" 
+                rows="4" 
+                class="w-full p-4 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
+                placeholder="z.B. Wir müssen das Projekt bis Freitag abschließen..."
+            ></textarea>
+            <button 
+                id="analyzeBtn"
+                class="mt-4 w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-3 px-6 rounded-lg hover:from-blue-700 hover:to-purple-700 transition duration-200 shadow-md"
+            >
+                Analysieren
+            </button>
+        </div>
+
+        <!-- Results Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- D - Dominant -->
+            <div class="quadrant bg-white rounded-lg shadow-lg p-6 border-t-4 border-red-500">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center text-white font-bold text-xl mr-3">
+                        D
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">Dominant</h2>
+                        <p class="text-sm text-gray-600">Ergebnisorientiert, direkt, entscheidungsfreudig</p>
+                    </div>
+                </div>
+                <div id="result-d" class="text-gray-700 leading-relaxed min-h-[120px]">
+                    <p class="text-gray-400 italic">Warten auf Eingabe...</p>
+                </div>
+            </div>
+
+            <!-- I - Initiativ -->
+            <div class="quadrant bg-white rounded-lg shadow-lg p-6 border-t-4 border-yellow-500">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center text-white font-bold text-xl mr-3">
+                        I
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">Initiativ</h2>
+                        <p class="text-sm text-gray-600">Enthusiastisch, kommunikativ, optimistisch</p>
+                    </div>
+                </div>
+                <div id="result-i" class="text-gray-700 leading-relaxed min-h-[120px]">
+                    <p class="text-gray-400 italic">Warten auf Eingabe...</p>
+                </div>
+            </div>
+
+            <!-- S - Stetig -->
+            <div class="quadrant bg-white rounded-lg shadow-lg p-6 border-t-4 border-green-500">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-xl mr-3">
+                        S
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">Stetig</h2>
+                        <p class="text-sm text-gray-600">Geduldig, loyal, teamorientiert</p>
+                    </div>
+                </div>
+                <div id="result-s" class="text-gray-700 leading-relaxed min-h-[120px]">
+                    <p class="text-gray-400 italic">Warten auf Eingabe...</p>
+                </div>
+            </div>
+
+            <!-- G - Gewissenhaft -->
+            <div class="quadrant bg-white rounded-lg shadow-lg p-6 border-t-4 border-blue-500">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-xl mr-3">
+                        G
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">Gewissenhaft</h2>
+                        <p class="text-sm text-gray-600">Analytisch, präzise, qualitätsorientiert</p>
+                    </div>
+                </div>
+                <div id="result-g" class="text-gray-700 leading-relaxed min-h-[120px]">
+                    <p class="text-gray-400 italic">Warten auf Eingabe...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info Footer -->
+        <div class="mt-8 text-center text-gray-600 text-sm">
+            <p>DISG-Modell: Dominant • Initiativ • Stetig • Gewissenhaft</p>
+        </div>
+    </div>
+
+    <script>
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const input = document.getElementById('input');
+        const results = {
+            d: document.getElementById('result-d'),
+            i: document.getElementById('result-i'),
+            s: document.getElementById('result-s'),
+            g: document.getElementById('result-g')
+        };
+
+        analyzeBtn.addEventListener('click', async () => {
+            const text = input.value.trim();
+            
+            if (!text) {
+                alert('Bitte geben Sie eine Nachricht ein.');
+                return;
+            }
+
+            // Disable button and show loading
+            analyzeBtn.disabled = true;
+            analyzeBtn.textContent = 'Analysiere...';
+            analyzeBtn.classList.add('loading');
+
+            // Show loading state in all quadrants
+            Object.values(results).forEach(el => {
+                el.innerHTML = '<p class="text-gray-400 italic">Wird generiert...</p>';
+            });
+
+            try {
+                // Analyze all 4 types
+                await Promise.all([
+                    analyzeType('d', text),
+                    analyzeType('i', text),
+                    analyzeType('s', text),
+                    analyzeType('g', text)
+                ]);
+            } catch (error) {
+                console.error('Error:', error);
+                Object.values(results).forEach(el => {
+                    el.innerHTML = '<p class="text-red-500">Fehler bei der Analyse. Bitte versuchen Sie es erneut.</p>';
+                });
+            } finally {
+                analyzeBtn.disabled = false;
+                analyzeBtn.textContent = 'Analysieren';
+                analyzeBtn.classList.remove('loading');
+            }
+        });
+
+        async function analyzeType(type, text) {
+            try {
+                // Ruft die sichere Serverless Function auf
+                // KEIN API Key im Frontend-Code!
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        type: type,
+                        text: text
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error(`API Error ${response.status}:`, errorText);
+                    throw new Error(`API Error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                if (data.error) {
+                    console.error('API returned error:', data.error);
+                    throw new Error(data.error);
+                }
+                
+                if (!data.result) {
+                    console.error('No result in response:', data);
+                    throw new Error('Keine Antwort vom Server');
+                }
+                
+                results[type].innerHTML = `<p class="fade-in">${data.result}</p>`;
+            } catch (error) {
+                console.error('Error in analyzeType:', error);
+                
+                // Spezifische Fehlermeldungen
+                let errorMessage = 'Fehler bei der Generierung.';
+                if (error.message.includes('404')) {
+                    errorMessage = 'API nicht gefunden. Bitte stellen Sie sicher, dass die Serverless Function deployed ist.';
+                } else if (error.message.includes('500')) {
+                    errorMessage = 'Server-Fehler. Bitte überprüfen Sie die API Key Konfiguration in Vercel.';
+                } else if (error.message.includes('Failed to fetch')) {
+                    errorMessage = 'Netzwerkfehler. Bitte überprüfen Sie Ihre Internetverbindung.';
+                }
+                
+                results[type].innerHTML = `<p class="text-red-500">${errorMessage}</p>`;
+                throw error;
+            }
+        }
+
+        // Allow Enter to submit (with Shift+Enter for new line)
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                analyzeBtn.click();
+            }
+        });
+    </script>
+</body>
+</html>
