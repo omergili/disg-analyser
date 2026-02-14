@@ -460,114 +460,117 @@ Schreibe direkt und handlungsorientiert.`;
             const focusAreas = {
                 d: {
                     focus: 'Zwischenmenschliche Aspekte, Akzeptanz und emotionale Faktoren',
-                    details: `
-Als D-Typ neigst du dazu, den Menschen-Faktor zu unterschätzen. Fokussiere auf:
+                    details: `Als D-Typ neigst du dazu, den Menschen-Faktor zu unterschätzen. Fokussiere auf:
 - Zwischenmenschliche Bedürfnisse im Team (Wer braucht Unterstützung?)
 - Akzeptanz der Beteiligten (Sind alle wirklich an Bord?)
 - Pufferzeiten (Nicht alles läuft wie geplant)
-- Emotionale Auswirkungen (Wie fühlen sich die Betroffenen?)
-- Teamdynamik und Stimmung
-- Zeit für Beziehungsaufbau
-- Kommunikation der "Warum"-Frage`
+- Emotionale Auswirkungen (Wie fühlen sich die Betroffenen?)`
                 },
                 i: {
                     focus: 'Details, rechtliche Aspekte, Dokumentation und Kosten',
-                    details: `
-Als I-Typ neigst du dazu, Details und Strukturen zu übersehen. Fokussiere auf:
+                    details: `Als I-Typ neigst du dazu, Details und Strukturen zu übersehen. Fokussiere auf:
 - Fehlende Detailtiefe (Konkrete Zahlen, Daten, Fakten)
 - Rechtliche Fallstricke (Compliance, Verträge, Haftung)
 - Dokumentationspflichten (Was muss schriftlich festgehalten werden?)
-- Langfristige Kosten-Nutzen-Analysen (ROI über Begeisterung hinaus)
-- Strukturierte Prozesse und Workflows
-- Risikobewertung jenseits von Optimismus
-- Follow-through und Nachverfolgung`
+- Langfristige Kosten-Nutzen-Analysen (ROI über Begeisterung hinaus)`
                 },
                 s: {
                     focus: 'Entscheidungsgeschwindigkeit, klare Ziele und Kursänderungen',
-                    details: `
-Als S-Typ neigst du dazu, zu lange abzuwarten und dich zu verzetteln. Fokussiere auf:
+                    details: `Als S-Typ neigst du dazu, zu lange abzuwarten und dich zu verzetteln. Fokussiere auf:
 - Notwendige Entscheidungsgeschwindigkeit (Wann ist "jetzt" der richtige Zeitpunkt?)
 - Klare Zielvorgaben gegen Verzettelung (Was ist das Hauptziel, was ist nice-to-have?)
 - Mut zur unpopulären Kurskorrektur (Auch wenn es unbequem ist)
-- Prioritäten setzen statt "allen gerecht werden"
-- Konfrontation wenn nötig
-- Tempo erhöhen trotz Unsicherheit
-- Innovation über bewährte Prozesse stellen`
+- Prioritäten setzen statt "allen gerecht werden"`
                 },
                 g: {
                     focus: 'Pragmatismus, Team-Begeisterung und Big Picture',
-                    details: `
-Als G-Typ neigst du dazu, dich in Details zu verlieren. Fokussiere auf:
+                    details: `Als G-Typ neigst du dazu, dich in Details zu verlieren. Fokussiere auf:
 - Pragmatismus: "Done is better than perfect" (Wann ist gut genug?)
 - Begeisterung des Teams (Menschen brauchen mehr als Fakten)
 - Das "Big Picture" hinter den Daten (Wozu dient das alles?)
-- Geschwindigkeit über Perfektion
-- Emotionale und soziale Dynamiken
-- Flexibilität bei Standards
-- Die Vision kommunizieren, nicht nur die Details`
+- Geschwindigkeit über Perfektion`
                 }
             };
 
             const typeFocus = focusAreas[userType];
 
-            const prompt = `Du bist ein erfahrener DISG-Coach. Erstelle eine prägnante, handlungsorientierte Checkliste für einen ${info.name}-Typ.
+            const prompt = `Du bist ein DISG-Coach. Erstelle eine Checkliste für einen ${info.name}-Typ bei folgender Aufgabe: "${task}"
 
-AUFGABE: "${task}"
-USER-TYP: ${info.name}
-
-SPEZIFISCHER FOKUS FÜR ${info.name.toUpperCase()}-TYP:
-${typeFocus.focus}
-
-KONTEXT:
+FOKUS: ${typeFocus.focus}
 ${typeFocus.details}
 
-AUFGABE: Erstelle 6-8 konkrete, handlungsorientierte Bulletpoints, die ein ${info.name}-Typ bei dieser Aufgabe WAHRSCHEINLICH VERGISST oder UNTERSCHÄTZT.
+Erstelle 6-8 prägnante Bulletpoints, die dieser Typ WAHRSCHEINLICH VERGISST. Jeder Punkt als Aufforderung oder Frage formuliert.
 
-ANFORDERUNGEN:
-- Jeder Punkt muss DIREKT ZUM HANDELN anregen
-- Formuliere als Aufforderung oder Frage (nicht als Feststellung)
-- Konkret und spezifisch für die gegebene Aufgabe
-- Fokussiere auf die blinden Flecken des ${info.name}-Typs
-- Keine allgemeinen Floskeln
-- Kurz und prägnant (max. 1 Zeile pro Punkt)
+FORMAT:
+• Definiere [X] BEVOR du [Y]
+• Plane explizit [Zeit] für [Aspekt]
+• Frage: [Konkrete Reflexionsfrage]
+• Setze eine Deadline für [Entscheidung]
 
-FORMAT (nutze eines dieser Muster):
-• Definiere [konkrete Sache] BEVOR du [Aktion]
-• Plane explizit [X] Stunden für [Y]
-• Hole aktiv Feedback von [Zielgruppe] ein
-• Setze eine harte Deadline für [Entscheidung]
-• Dokumentiere [spezifische Details] schriftlich
-• Frage: Wer ist emotional betroffen von [X]?
-
-Gib NUR die Bulletpoints zurück, keine Einleitung, keine Erklärung.`;
+NUR die Bulletpoints, keine Einleitung.`;
 
             try {
+                console.log('Generating checklist for type:', userType);
+                
                 const response = await fetch('/api/analyze', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ type: userType, text: prompt })
                 });
 
-                if (!response.ok) throw new Error(`API Error: ${response.status}`);
+                if (!response.ok) {
+                    console.error('API response not ok:', response.status);
+                    throw new Error(`API Error: ${response.status}`);
+                }
 
                 const data = await response.json();
+                console.log('Checklist response:', data);
                 
-                // Formatiere die Checkliste
-                const items = data.result
+                if (!data.result) {
+                    console.error('No result in response');
+                    throw new Error('Keine Antwort erhalten');
+                }
+
+                // Sehr robustes Parsing
+                let items = data.result
                     .split('\n')
+                    .map(line => line.trim())
+                    .filter(line => line.length > 0)
                     .filter(line => {
-                        const trimmed = line.trim();
-                        return trimmed.startsWith('•') || 
-                               trimmed.startsWith('-') || 
-                               trimmed.startsWith('*') ||
-                               /^\d+\./.test(trimmed);
+                        // Akzeptiere Zeilen die mit Bullet, Dash oder Nummer starten
+                        return line.startsWith('•') || 
+                               line.startsWith('-') || 
+                               line.startsWith('*') ||
+                               line.startsWith('✓') ||
+                               /^\d+[\.)]\s/.test(line);
                     })
                     .map(item => {
-                        // Entferne Bullet-Zeichen und nummerierung
-                        let text = item.replace(/^[•\-*]\s*/, '').replace(/^\d+\.\s*/, '').trim();
-                        return text;
+                        // Entferne alle Präfixe
+                        return item
+                            .replace(/^[•\-*✓]\s*/, '')
+                            .replace(/^\d+[\.)]\s*/, '')
+                            .trim();
                     })
-                    .filter(text => text.length > 0);
+                    .filter(text => text.length > 10); // Mindestlänge
+
+                console.log('Parsed items:', items);
+
+                if (items.length === 0) {
+                    // Fallback: Nimm alle Zeilen die lang genug sind
+                    items = data.result
+                        .split('\n')
+                        .map(line => line.trim())
+                        .filter(line => line.length > 20 && !line.toLowerCase().includes('checkliste'))
+                        .slice(0, 8);
+                    
+                    console.log('Fallback items:', items);
+                }
+
+                if (items.length === 0) {
+                    checklistContent.innerHTML = '<p class="text-slate-600">Checkliste konnte nicht generiert werden. Bitte versuche es erneut.</p>';
+                    checklistSection.classList.remove('hidden');
+                    return;
+                }
 
                 // Erstelle HTML mit Icons
                 const formattedItems = items.map(text => {
@@ -581,8 +584,12 @@ Gib NUR die Bulletpoints zurück, keine Einleitung, keine Erklärung.`;
                 
                 checklistContent.innerHTML = formattedItems;
                 checklistSection.classList.remove('hidden');
+                
+                console.log('Checklist rendered successfully');
             } catch (error) {
                 console.error('Checklist error:', error);
+                checklistContent.innerHTML = `<p class="text-red-600">Fehler beim Laden der Checkliste: ${error.message}</p>`;
+                checklistSection.classList.remove('hidden');
             }
         }
 
