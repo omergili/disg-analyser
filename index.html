@@ -3,132 +3,259 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DISG Kommunikations-Analyzer</title>
+    <title>myLurch – DISG Kommunikations-Analyse</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .quadrant {
-            transition: all 0.3s ease;
+        .quadrant-card {
+            transition: all 0.2s ease;
         }
-        .quadrant:hover {
+        .quadrant-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(30, 41, 59, 0.15);
         }
-        .loading {
-            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        .btn-primary {
+            background: #1e293b;
+            transition: all 0.2s ease;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .btn-primary:hover {
+            background: #334155;
         }
-        .fade-in {
-            animation: fadeIn 0.5s ease-out;
+        .btn-secondary {
+            border: 2px solid #1e293b;
+            color: #1e293b;
+            transition: all 0.2s ease;
+        }
+        .btn-secondary:hover {
+            background: #f8fafc;
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen p-4">
-    <div class="max-w-7xl mx-auto">
-        <!-- Header -->
-        <div class="text-center mb-8 mt-6">
-            <h1 class="text-4xl font-bold text-gray-800 mb-2">DISG Kommunikations-Analyzer</h1>
-            <p class="text-gray-600">Erfahren Sie, wie verschiedene Persönlichkeitstypen auf Ihre Nachricht reagieren würden</p>
-            <p class="text-sm text-purple-600 mt-2">🔒 Sicher • 🚀 Powered by Groq AI</p>
+<body class="bg-white">
+    <!-- Header -->
+    <header class="bg-slate-900 text-white py-6 shadow-md">
+        <div class="max-w-7xl mx-auto px-4">
+            <h1 class="text-3xl font-bold tracking-tight">myLurch</h1>
+            <p class="text-slate-300 mt-1">DISG Kommunikations-Analyse</p>
         </div>
+    </header>
 
+    <!-- Hero Section -->
+    <section class="bg-slate-50 py-8 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h2 class="text-2xl font-semibold text-slate-900 mb-2">
+                Präzise Kommunikation durch Perspektivwechsel
+            </h2>
+            <p class="text-slate-600 max-w-2xl mx-auto">
+                Analyse und Optimierung von Nachrichten basierend auf DISG-Persönlichkeitsprofilen
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Tool Section -->
+    <main class="max-w-7xl mx-auto px-4 py-12">
         <!-- Input Section -->
-        <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
-            <label for="input" class="block text-lg font-semibold text-gray-700 mb-3">
-                Geben Sie Ihre Nachricht ein:
+        <div class="bg-white border-2 border-slate-200 rounded-lg p-8 mb-8 shadow-sm">
+            <label for="messageInput" class="block text-lg font-semibold text-slate-900 mb-3">
+                Nachricht eingeben
             </label>
             <textarea 
-                id="input" 
-                rows="4" 
-                class="w-full p-4 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition"
-                placeholder="z.B. Wir müssen das Projekt bis Freitag abschließen..."
+                id="messageInput" 
+                rows="5" 
+                class="w-full p-4 border-2 border-slate-300 rounded-lg focus:border-slate-900 focus:ring-2 focus:ring-slate-200 outline-none transition font-mono text-sm"
+                placeholder="Nachricht hier eingeben..."
             ></textarea>
-            <button 
-                id="analyzeBtn"
-                class="mt-4 w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-3 px-6 rounded-lg hover:from-blue-700 hover:to-purple-700 transition duration-200 shadow-md"
-            >
-                Analysieren
-            </button>
+            
+            <div class="mt-6 flex flex-col sm:flex-row gap-3">
+                <button 
+                    id="analyzeBtn"
+                    class="btn-primary text-white font-semibold py-3 px-8 rounded-lg flex-1 sm:flex-initial"
+                >
+                    Analysieren
+                </button>
+                <div class="flex gap-2 flex-wrap">
+                    <button class="btn-secondary font-medium py-3 px-6 rounded-lg rewrite-btn" data-type="d">
+                        Auf D umschreiben
+                    </button>
+                    <button class="btn-secondary font-medium py-3 px-6 rounded-lg rewrite-btn" data-type="i">
+                        Auf I umschreiben
+                    </button>
+                    <button class="btn-secondary font-medium py-3 px-6 rounded-lg rewrite-btn" data-type="s">
+                        Auf S umschreiben
+                    </button>
+                    <button class="btn-secondary font-medium py-3 px-6 rounded-lg rewrite-btn" data-type="g">
+                        Auf G umschreiben
+                    </button>
+                </div>
+            </div>
         </div>
 
         <!-- Results Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- D - Dominant -->
-            <div class="quadrant bg-white rounded-lg shadow-lg p-6 border-t-4 border-red-500">
-                <div class="flex items-center mb-4">
-                    <div class="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center text-white font-bold text-xl mr-3">
-                        D
+        <div id="resultsSection" class="mb-12">
+            <h3 class="text-xl font-semibold text-slate-900 mb-6">Perspektivanalyse</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- D - Dominant -->
+                <div class="quadrant-card bg-white border-2 border-slate-200 rounded-lg p-6">
+                    <div class="flex items-center mb-4 pb-3 border-b border-slate-200">
+                        <div class="w-3 h-8 bg-red-600 rounded mr-3"></div>
+                        <div>
+                            <h4 class="text-lg font-bold text-slate-900">Dominant (D)</h4>
+                            <p class="text-sm text-slate-600">Ergebnisorientiert, direkt</p>
+                        </div>
                     </div>
-                    <div>
-                        <h2 class="text-2xl font-bold text-gray-800">Dominant</h2>
-                        <p class="text-sm text-gray-600">Ergebnisorientiert, direkt, entscheidungsfreudig</p>
+                    <div id="result-d" class="text-slate-700 leading-relaxed min-h-[80px]">
+                        <p class="text-slate-400 italic">Wartet auf Eingabe</p>
                     </div>
                 </div>
-                <div id="result-d" class="text-gray-700 leading-relaxed min-h-[120px]">
-                    <p class="text-gray-400 italic">Warten auf Eingabe...</p>
-                </div>
-            </div>
 
-            <!-- I - Initiativ -->
-            <div class="quadrant bg-white rounded-lg shadow-lg p-6 border-t-4 border-yellow-500">
-                <div class="flex items-center mb-4">
-                    <div class="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center text-white font-bold text-xl mr-3">
-                        I
+                <!-- I - Initiativ -->
+                <div class="quadrant-card bg-white border-2 border-slate-200 rounded-lg p-6">
+                    <div class="flex items-center mb-4 pb-3 border-b border-slate-200">
+                        <div class="w-3 h-8 bg-yellow-500 rounded mr-3"></div>
+                        <div>
+                            <h4 class="text-lg font-bold text-slate-900">Initiativ (I)</h4>
+                            <p class="text-sm text-slate-600">Kommunikativ, enthusiastisch</p>
+                        </div>
                     </div>
-                    <div>
-                        <h2 class="text-2xl font-bold text-gray-800">Initiativ</h2>
-                        <p class="text-sm text-gray-600">Enthusiastisch, kommunikativ, optimistisch</p>
+                    <div id="result-i" class="text-slate-700 leading-relaxed min-h-[80px]">
+                        <p class="text-slate-400 italic">Wartet auf Eingabe</p>
                     </div>
                 </div>
-                <div id="result-i" class="text-gray-700 leading-relaxed min-h-[120px]">
-                    <p class="text-gray-400 italic">Warten auf Eingabe...</p>
-                </div>
-            </div>
 
-            <!-- S - Stetig -->
-            <div class="quadrant bg-white rounded-lg shadow-lg p-6 border-t-4 border-green-500">
-                <div class="flex items-center mb-4">
-                    <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center text-white font-bold text-xl mr-3">
-                        S
+                <!-- S - Stetig -->
+                <div class="quadrant-card bg-white border-2 border-slate-200 rounded-lg p-6">
+                    <div class="flex items-center mb-4 pb-3 border-b border-slate-200">
+                        <div class="w-3 h-8 bg-green-600 rounded mr-3"></div>
+                        <div>
+                            <h4 class="text-lg font-bold text-slate-900">Stetig (S)</h4>
+                            <p class="text-sm text-slate-600">Geduldig, teamorientiert</p>
+                        </div>
                     </div>
-                    <div>
-                        <h2 class="text-2xl font-bold text-gray-800">Stetig</h2>
-                        <p class="text-sm text-gray-600">Geduldig, loyal, teamorientiert</p>
+                    <div id="result-s" class="text-slate-700 leading-relaxed min-h-[80px]">
+                        <p class="text-slate-400 italic">Wartet auf Eingabe</p>
                     </div>
                 </div>
-                <div id="result-s" class="text-gray-700 leading-relaxed min-h-[120px]">
-                    <p class="text-gray-400 italic">Warten auf Eingabe...</p>
-                </div>
-            </div>
 
-            <!-- G - Gewissenhaft -->
-            <div class="quadrant bg-white rounded-lg shadow-lg p-6 border-t-4 border-blue-500">
-                <div class="flex items-center mb-4">
-                    <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold text-xl mr-3">
-                        G
+                <!-- G - Gewissenhaft -->
+                <div class="quadrant-card bg-white border-2 border-slate-200 rounded-lg p-6">
+                    <div class="flex items-center mb-4 pb-3 border-b border-slate-200">
+                        <div class="w-3 h-8 bg-blue-600 rounded mr-3"></div>
+                        <div>
+                            <h4 class="text-lg font-bold text-slate-900">Gewissenhaft (G)</h4>
+                            <p class="text-sm text-slate-600">Analytisch, präzise</p>
+                        </div>
                     </div>
-                    <div>
-                        <h2 class="text-2xl font-bold text-gray-800">Gewissenhaft</h2>
-                        <p class="text-sm text-gray-600">Analytisch, präzise, qualitätsorientiert</p>
+                    <div id="result-g" class="text-slate-700 leading-relaxed min-h-[80px]">
+                        <p class="text-slate-400 italic">Wartet auf Eingabe</p>
                     </div>
-                </div>
-                <div id="result-g" class="text-gray-700 leading-relaxed min-h-[120px]">
-                    <p class="text-gray-400 italic">Warten auf Eingabe...</p>
                 </div>
             </div>
         </div>
 
-        <!-- Info Footer -->
-        <div class="mt-8 text-center text-gray-600 text-sm">
-            <p>DISG-Modell: Dominant • Initiativ • Stetig • Gewissenhaft</p>
+        <!-- Rewrite Result Section -->
+        <div id="rewriteSection" class="mb-12 hidden">
+            <h3 class="text-xl font-semibold text-slate-900 mb-4">Umgeschriebene Nachricht</h3>
+            <div class="bg-slate-50 border-2 border-slate-200 rounded-lg p-6">
+                <div id="rewriteResult" class="text-slate-700 leading-relaxed whitespace-pre-wrap"></div>
+                <button id="copyBtn" class="mt-4 btn-secondary font-medium py-2 px-6 rounded-lg">
+                    In Zwischenablage kopieren
+                </button>
+            </div>
         </div>
-    </div>
+
+        <!-- Info Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 pt-12 border-t-2 border-slate-200">
+            <!-- Der Nutzen -->
+            <div>
+                <h3 class="text-xl font-bold text-slate-900 mb-4">Der Nutzen</h3>
+                <div class="text-slate-700 space-y-3 leading-relaxed">
+                    <p>
+                        <strong>Missverständnisse vermeiden:</strong> Unterschiedliche Persönlichkeitstypen interpretieren 
+                        identische Nachrichten verschieden. Was für einen direkten D-Typ klar ist, wirkt auf einen 
+                        harmoniebedürftigen S-Typ möglicherweise zu hart.
+                    </p>
+                    <p>
+                        <strong>Effizienz steigern:</strong> Durch Anpassung der Kommunikation an den Empfänger 
+                        werden Rückfragen minimiert und Entscheidungen beschleunigt.
+                    </p>
+                    <p>
+                        <strong>Konflikte reduzieren:</strong> Präventive Kommunikationsoptimierung verhindert 
+                        unnötige Reibungspunkte im Team und mit Stakeholdern.
+                    </p>
+                    <p>
+                        <strong>Anwendungsbereich:</strong> E-Mails, Meetings, Präsentationen, Feedback-Gespräche, 
+                        Change Management.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Das Modell -->
+            <div>
+                <h3 class="text-xl font-bold text-slate-900 mb-4">Das Modell</h3>
+                <div class="space-y-4">
+                    <div class="flex items-start">
+                        <div class="w-4 h-4 bg-red-600 rounded mr-3 mt-1 flex-shrink-0"></div>
+                        <div>
+                            <h4 class="font-semibold text-slate-900">Dominant (D)</h4>
+                            <p class="text-sm text-slate-600">
+                                Fokus auf Ergebnisse und Kontrolle. Direkte Kommunikation, schnelle Entscheidungen, 
+                                ungeduldig bei Details.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start">
+                        <div class="w-4 h-4 bg-yellow-500 rounded mr-3 mt-1 flex-shrink-0"></div>
+                        <div>
+                            <h4 class="font-semibold text-slate-900">Initiativ (I)</h4>
+                            <p class="text-sm text-slate-600">
+                                Fokus auf Menschen und Beziehungen. Enthusiastisch, kommunikativ, optimistisch, 
+                                beziehungsorientiert.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start">
+                        <div class="w-4 h-4 bg-green-600 rounded mr-3 mt-1 flex-shrink-0"></div>
+                        <div>
+                            <h4 class="font-semibold text-slate-900">Stetig (S)</h4>
+                            <p class="text-sm text-slate-600">
+                                Fokus auf Stabilität und Teamarbeit. Geduldig, loyal, harmoniebedürftig, 
+                                bevorzugt bewährte Prozesse.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start">
+                        <div class="w-4 h-4 bg-blue-600 rounded mr-3 mt-1 flex-shrink-0"></div>
+                        <div>
+                            <h4 class="font-semibold text-slate-900">Gewissenhaft (G)</h4>
+                            <p class="text-sm text-slate-600">
+                                Fokus auf Qualität und Genauigkeit. Analytisch, detailorientiert, präzise, 
+                                faktenbasiert.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-8 mt-16">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <p class="text-sm">myLurch – DISG Kommunikations-Analyse</p>
+            <p class="text-xs mt-2">Powered by Groq AI</p>
+        </div>
+    </footer>
 
     <script>
+        const messageInput = document.getElementById('messageInput');
         const analyzeBtn = document.getElementById('analyzeBtn');
-        const input = document.getElementById('input');
+        const rewriteBtns = document.querySelectorAll('.rewrite-btn');
+        const copyBtn = document.getElementById('copyBtn');
+        const rewriteSection = document.getElementById('rewriteSection');
+        const rewriteResult = document.getElementById('rewriteResult');
+        
         const results = {
             d: document.getElementById('result-d'),
             i: document.getElementById('result-i'),
@@ -136,26 +263,47 @@
             g: document.getElementById('result-g')
         };
 
+        const typeInfo = {
+            d: {
+                name: 'Dominant',
+                traits: 'direkt, ergebnisorientiert, entscheidungsfreudig, ungeduldig',
+                focus: 'Fokus auf Ergebnisse und Kontrolle'
+            },
+            i: {
+                name: 'Initiativ',
+                traits: 'enthusiastisch, kommunikativ, optimistisch, beziehungsorientiert',
+                focus: 'Fokus auf Menschen und positive Energie'
+            },
+            s: {
+                name: 'Stetig',
+                traits: 'geduldig, loyal, kooperativ, harmoniebedürftig',
+                focus: 'Fokus auf Stabilität und Teamarbeit'
+            },
+            g: {
+                name: 'Gewissenhaft',
+                traits: 'analytisch, präzise, detailorientiert, qualitätsbewusst',
+                focus: 'Fokus auf Genauigkeit und Qualität'
+            }
+        };
+
+        // Analyze function
         analyzeBtn.addEventListener('click', async () => {
-            const text = input.value.trim();
+            const text = messageInput.value.trim();
             
             if (!text) {
-                alert('Bitte geben Sie eine Nachricht ein.');
+                alert('Bitte Nachricht eingeben.');
                 return;
             }
 
-            // Disable button and show loading
             analyzeBtn.disabled = true;
             analyzeBtn.textContent = 'Analysiere...';
-            analyzeBtn.classList.add('loading');
+            rewriteSection.classList.add('hidden');
 
-            // Show loading state in all quadrants
             Object.values(results).forEach(el => {
-                el.innerHTML = '<p class="text-gray-400 italic">Wird generiert...</p>';
+                el.innerHTML = '<p class="text-slate-400 italic">Wird analysiert...</p>';
             });
 
             try {
-                // Analyze all 4 types
                 await Promise.all([
                     analyzeType('d', text),
                     analyzeType('i', text),
@@ -163,72 +311,103 @@
                     analyzeType('g', text)
                 ]);
             } catch (error) {
-                console.error('Error:', error);
-                Object.values(results).forEach(el => {
-                    el.innerHTML = '<p class="text-red-500">Fehler bei der Analyse. Bitte versuchen Sie es erneut.</p>';
-                });
+                console.error('Fehler:', error);
             } finally {
                 analyzeBtn.disabled = false;
                 analyzeBtn.textContent = 'Analysieren';
-                analyzeBtn.classList.remove('loading');
             }
         });
 
         async function analyzeType(type, text) {
+            const info = typeInfo[type];
+            const prompt = `Du bist ein DISG-Kommunikationsexperte. Analysiere die folgende Nachricht aus der Perspektive eines ${info.name}-Typs (${info.traits}).
+
+Nachricht: "${text}"
+
+Schreibe eine präzise Analyse (2-3 Sätze), wie eine Person mit ${info.name}-Profil diese Nachricht interpretieren und darauf reagieren würde. ${info.focus}.
+
+Antworte nur mit der Analyse, ohne Einleitung.`;
+
             try {
-                // Ruft die sichere Serverless Function auf
-                // KEIN API Key im Frontend-Code!
                 const response = await fetch('/api/analyze', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        type: type,
-                        text: text
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type, text: prompt })
                 });
 
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error(`API Error ${response.status}:`, errorText);
-                    throw new Error(`API Error: ${response.status}`);
-                }
+                if (!response.ok) throw new Error(`API Error: ${response.status}`);
 
                 const data = await response.json();
-                
-                if (data.error) {
-                    console.error('API returned error:', data.error);
-                    throw new Error(data.error);
-                }
-                
-                if (!data.result) {
-                    console.error('No result in response:', data);
-                    throw new Error('Keine Antwort vom Server');
-                }
-                
-                results[type].innerHTML = `<p class="fade-in">${data.result}</p>`;
+                results[type].innerHTML = `<p>${data.result}</p>`;
             } catch (error) {
-                console.error('Error in analyzeType:', error);
-                
-                // Spezifische Fehlermeldungen
-                let errorMessage = 'Fehler bei der Generierung.';
-                if (error.message.includes('404')) {
-                    errorMessage = 'API nicht gefunden. Bitte stellen Sie sicher, dass die Serverless Function deployed ist.';
-                } else if (error.message.includes('500')) {
-                    errorMessage = 'Server-Fehler. Bitte überprüfen Sie die API Key Konfiguration in Vercel.';
-                } else if (error.message.includes('Failed to fetch')) {
-                    errorMessage = 'Netzwerkfehler. Bitte überprüfen Sie Ihre Internetverbindung.';
-                }
-                
-                results[type].innerHTML = `<p class="text-red-500">${errorMessage}</p>`;
+                results[type].innerHTML = '<p class="text-red-600">Fehler bei der Analyse.</p>';
                 throw error;
             }
         }
 
-        // Allow Enter to submit (with Shift+Enter for new line)
-        input.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
+        // Rewrite function
+        rewriteBtns.forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const targetType = btn.dataset.type;
+                const text = messageInput.value.trim();
+                
+                if (!text) {
+                    alert('Bitte Nachricht eingeben.');
+                    return;
+                }
+
+                btn.disabled = true;
+                const originalText = btn.textContent;
+                btn.textContent = 'Schreibt um...';
+
+                rewriteSection.classList.remove('hidden');
+                rewriteResult.textContent = 'Nachricht wird umgeschrieben...';
+
+                try {
+                    const info = typeInfo[targetType];
+                    const prompt = `Du bist ein professioneller Kommunikationsberater. Schreibe die folgende Nachricht so um, dass sie optimal auf einen ${info.name}-Typ (${info.traits}) wirkt. ${info.focus}.
+
+Originalnachricht: "${text}"
+
+Schreibe die Nachricht komplett um, sodass sie für den ${info.name}-Typ perfekt verständlich und ansprechend ist. Behalte die Kernbotschaft bei, passe aber Ton, Struktur und Formulierung an.
+
+Gib NUR die umgeschriebene Nachricht zurück, ohne Erklärungen oder Kommentare.`;
+
+                    const response = await fetch('/api/analyze', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ type: targetType, text: prompt })
+                    });
+
+                    if (!response.ok) throw new Error(`API Error: ${response.status}`);
+
+                    const data = await response.json();
+                    rewriteResult.textContent = data.result;
+                } catch (error) {
+                    rewriteResult.textContent = 'Fehler beim Umschreiben. Bitte versuchen Sie es erneut.';
+                    console.error('Fehler:', error);
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = originalText;
+                }
+            });
+        });
+
+        // Copy function
+        copyBtn.addEventListener('click', () => {
+            const text = rewriteResult.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = 'Kopiert!';
+                setTimeout(() => {
+                    copyBtn.textContent = originalText;
+                }, 2000);
+            });
+        });
+
+        // Enter to submit
+        messageInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
                 e.preventDefault();
                 analyzeBtn.click();
             }
