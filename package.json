@@ -1,0 +1,18 @@
+{
+  "name": "disg-analyzer",
+  "version": "1.0.0",
+  "description": "DISG Kommunikations-Analyzer - Analysiert Nachrichten aus der Perspektive verschiedener Persönlichkeitstypen",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx serve .",
+    "build": "echo 'Static site - no build needed'"
+  },
+  "keywords": [
+    "disg",
+    "personality",
+    "communication",
+    "analysis"
+  ],
+  "author": "",
+  "license": "MIT"
+}
