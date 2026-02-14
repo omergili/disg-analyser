@@ -2,6 +2,7 @@
 
 ## Schritt 1: API Key besorgen
 
+
 1. Gehe zu [console.groq.com](https://console.groq.com)
 2. Klicke auf "Sign Up" (falls noch kein Account)
 3. Bestätige deine E-Mail
