@@ -2,7 +2,7 @@
 
 Eine interaktive Webanwendung, die analysiert, wie verschiedene DISG-Persönlichkeitstypen auf eine Nachricht reagieren würden.
 
-## Was ist DISG?
+## 🎯 Was ist DISG?
 
 DISG ist ein Persönlichkeitsmodell mit vier Typen:
 - **D** (Dominant) - Ergebnisorientiert, direkt, entscheidungsfreudig
@@ -10,90 +10,127 @@ DISG ist ein Persönlichkeitsmodell mit vier Typen:
 - **S** (Stetig) - Geduldig, loyal, teamorientiert
 - **G** (Gewissenhaft) - Analytisch, präzise, qualitätsorientiert
 
-## Features
+## ✨ Features
 
-- 🎯 Echtzeit-Analyse mit Claude AI
+- 🎯 Echtzeit-Analyse mit Groq AI (Llama 3.3 70B)
 - 🎨 Modernes, responsives Design
 - 📱 Mobile-optimiert
-- ⚡ Schnelle Antworten
+- ⚡ Ultra-schnelle Antworten
+- 🔒 Sicherer API Key (Serverless Functions)
 - 🔄 Alle vier Typen gleichzeitig
 
-## Deployment auf Vercel
+## 🚀 Deployment auf Vercel
 
 ### Schnell-Deployment
 
-1. Installiere Vercel CLI (falls noch nicht geschehen):
+1. **Projekt hochladen:**
+   - Gehe zu [vercel.com](https://vercel.com)
+   - Klicke "New Project"
+   - Lade dein Projekt hoch (ZIP oder GitHub)
+
+2. **Environment Variable setzen:**
+   - Gehe zu: Settings → Environment Variables
+   - Füge hinzu:
+     - Name: `GROQ_API_KEY`
+     - Value: `dein-groq-api-key` (von console.groq.com)
+     - Environment: Production ✅ Preview ✅ Development ✅
+
+3. **Deploy!**
+   - Vercel deployed automatisch
+   - Fertig! 🎉
+
+### Über Vercel CLI
+
 ```bash
+# 1. Installiere Vercel CLI
 npm install -g vercel
-```
 
-2. Im Projektordner:
-```bash
+# 2. Login
+vercel login
+
+# 3. Deploy
 vercel
+
+# 4. Setze Environment Variable
+vercel env add GROQ_API_KEY
+# Eingeben: dein-groq-api-key
+# Wähle: Production, Preview, Development
+
+# 5. Production Deploy
+vercel --prod
 ```
 
-3. Folge den Anweisungen im Terminal
+## 🔑 API Key bekommen
 
-### Über GitHub
+1. Gehe zu [console.groq.com](https://console.groq.com)
+2. Registriere dich (kostenlos)
+3. Erstelle einen API Key
+4. Nutze diesen Key in Vercel Environment Variables
 
-1. Pushe den Code zu GitHub
-2. Gehe zu [vercel.com](https://vercel.com)
-3. Klicke auf "New Project"
-4. Importiere dein GitHub Repository
-5. Klicke auf "Deploy"
+**WICHTIG:** Setze den Key NIEMALS direkt im Code! Nutze immer Environment Variables.
 
-### Über Vercel Dashboard
-
-1. Zippe alle Dateien
-2. Gehe zu [vercel.com](https://vercel.com)
-3. Klicke auf "New Project"
-4. Wähle "Upload"
-5. Lade die ZIP-Datei hoch
-
-## Lokales Testen
+## 💻 Lokales Testen
 
 ```bash
-# Mit Python
-python -m http.server 8000
+# 1. Erstelle .env Datei
+echo "GROQ_API_KEY=dein-key" > .env
 
-# Mit Node.js
-npx serve .
+# 2. Installiere Vercel CLI
+npm install -g vercel
 
-# Dann öffne: http://localhost:8000
+# 3. Starte lokal
+vercel dev
+
+# 4. Öffne: http://localhost:3000
 ```
 
-## Projektstruktur
+## 📁 Projektstruktur
 
 ```
 disg-analyzer/
-├── index.html       # Hauptdatei
-├── vercel.json      # Vercel-Konfiguration
-├── package.json     # Projekt-Metadaten
-└── README.md        # Diese Datei
+├── index.html              # Frontend (KEIN API Key!)
+├── api/
+│   └── analyze.js          # Serverless Function (liest .env)
+├── .env.example            # Template für API Key
+├── .gitignore              # Schützt .env
+├── vercel.json             # Vercel-Konfiguration
+├── package.json            # Projekt-Metadaten
+└── README.md               # Diese Datei
 ```
 
-## Technologie
+## 🔒 Sicherheit
 
-- **Frontend**: HTML, Tailwind CSS, Vanilla JavaScript
-- **AI**: Anthropic Claude API (Sonnet 4)
-- **Hosting**: Vercel
+- ✅ API Key wird NUR auf dem Server gespeichert
+- ✅ Kein API Key im Frontend-Code
+- ✅ `.env` ist in `.gitignore`
+- ✅ Serverless Functions schützen sensible Daten
 
-## Verwendung
+## 🎮 Verwendung
 
 1. Öffne die Website
 2. Gib eine Nachricht ein (z.B. "Wir müssen das Projekt bis Freitag abschließen")
 3. Klicke auf "Analysieren"
 4. Sieh, wie jeder DISG-Typ reagieren würde
 
-## Hinweis
+## 🛠️ Technologie
 
-Die Claude API wird direkt im Browser aufgerufen. Da kein API-Schlüssel erforderlich ist (wird von Claude.ai automatisch bereitgestellt), funktioniert dies nur in der Claude.ai-Umgebung.
+- **Frontend**: HTML, Tailwind CSS, Vanilla JavaScript
+- **Backend**: Vercel Serverless Functions (Node.js)
+- **AI**: Groq API (Llama 3.3 70B Versatile)
+- **Hosting**: Vercel
 
-Für eine produktive Version solltest du:
-- Ein Backend mit API-Schlüsselverwaltung erstellen
-- Rate Limiting implementieren
-- Fehlerbehandlung verbessern
+## 📊 API Limits (Groq Free Tier)
 
-## Lizenz
+- 14.400 Requests pro Tag
+- 30 Requests pro Minute
+- Komplett kostenlos!
+
+## 📝 Lizenz
 
 MIT
+
+## 🤝 Support
+
+Bei Fragen oder Problemen:
+- Groq Docs: [console.groq.com/docs](https://console.groq.com/docs)
+- Vercel Docs: [vercel.com/docs](https://vercel.com/docs)

@@ -177,7 +177,7 @@
         async function analyzeType(type, text) {
             try {
                 // Ruft die sichere Serverless Function auf
-                // API Key ist NICHT im Frontend-Code!
+                // KEIN API Key im Frontend-Code!
                 const response = await fetch('/api/analyze', {
                     method: 'POST',
                     headers: {
