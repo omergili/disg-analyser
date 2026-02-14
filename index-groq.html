@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DISG Kommunikations-Analyzer</title>
+    <title>DISG Kommunikations-Analyzer (Groq Version)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .quadrant {
@@ -31,6 +31,32 @@
         <div class="text-center mb-8 mt-6">
             <h1 class="text-4xl font-bold text-gray-800 mb-2">DISG Kommunikations-Analyzer</h1>
             <p class="text-gray-600">Erfahren Sie, wie verschiedene Persönlichkeitstypen auf Ihre Nachricht reagieren würden</p>
+            <p class="text-sm text-purple-600 mt-2">🚀 Powered by Groq (Ultra-schnell!)</p>
+        </div>
+
+        <!-- API Key Input -->
+        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="ml-3 flex-1">
+                    <p class="text-sm text-yellow-700">
+                        <strong>API Key erforderlich:</strong> Hole dir einen kostenlosen Groq API Key von 
+                        <a href="https://console.groq.com" target="_blank" class="underline font-semibold">console.groq.com</a>
+                    </p>
+                    <div class="mt-2">
+                        <input 
+                            type="password" 
+                            id="apiKey" 
+                            placeholder="gsk_..." 
+                            class="w-full p-2 border border-yellow-300 rounded focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 outline-none"
+                        >
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Input Section -->
@@ -128,6 +154,7 @@
     <script>
         const analyzeBtn = document.getElementById('analyzeBtn');
         const input = document.getElementById('input');
+        const apiKeyInput = document.getElementById('apiKey');
         const results = {
             d: document.getElementById('result-d'),
             i: document.getElementById('result-i'),
@@ -160,9 +187,15 @@
 
         analyzeBtn.addEventListener('click', async () => {
             const text = input.value.trim();
+            const apiKey = apiKeyInput.value.trim();
             
             if (!text) {
                 alert('Bitte geben Sie eine Nachricht ein.');
+                return;
+            }
+
+            if (!apiKey) {
+                alert('Bitte geben Sie Ihren Groq API Key ein. Holen Sie sich einen kostenlosen von console.groq.com');
                 return;
             }
 
@@ -179,15 +212,15 @@
             try {
                 // Analyze all 4 types
                 await Promise.all([
-                    analyzeType('d', text),
-                    analyzeType('i', text),
-                    analyzeType('s', text),
-                    analyzeType('g', text)
+                    analyzeType('d', text, apiKey),
+                    analyzeType('i', text, apiKey),
+                    analyzeType('s', text, apiKey),
+                    analyzeType('g', text, apiKey)
                 ]);
             } catch (error) {
                 console.error('Error:', error);
                 Object.values(results).forEach(el => {
-                    el.innerHTML = '<p class="text-red-500">Fehler bei der Analyse. Bitte versuchen Sie es erneut.</p>';
+                    el.innerHTML = '<p class="text-red-500">Fehler bei der Analyse. Bitte überprüfen Sie Ihren API Key.</p>';
                 });
             } finally {
                 analyzeBtn.disabled = false;
@@ -196,7 +229,7 @@
             }
         });
 
-        async function analyzeType(type, text) {
+        async function analyzeType(type, text, apiKey) {
             const typeInfo = typeDescriptions[type];
             
             const prompt = `Du bist ein DISG-Persönlichkeitsexperte. Analysiere die folgende Nachricht aus der Perspektive eines ${typeInfo.name}-Typs (${typeInfo.traits}).
@@ -208,42 +241,33 @@ Schreibe eine kurze, authentische Reaktion (2-4 Sätze), wie eine Person mit ${t
 Antworte NUR mit der Reaktion, ohne Einleitung oder Erklärung.`;
 
             try {
-                // Hugging Face API - KOSTENLOS!
-                // Ersetze 'YOUR_HF_TOKEN' mit deinem Token von huggingface.co/settings/tokens
-                const HF_TOKEN = 'YOUR_HF_TOKEN'; // Optional, funktioniert auch ohne für Rate-Limited Access
-                
-                const response = await fetch('https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2', {
+                const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        ...(HF_TOKEN !== 'YOUR_HF_TOKEN' && { 'Authorization': `Bearer ${HF_TOKEN}` })
+                        'Authorization': `Bearer ${apiKey}`
                     },
                     body: JSON.stringify({
-                        inputs: prompt,
-                        parameters: {
-                            max_new_tokens: 250,
-                            temperature: 0.7,
-                            top_p: 0.95,
-                            return_full_text: false
-                        }
+                        model: 'llama-3.3-70b-versatile',
+                        messages: [
+                            { role: 'user', content: prompt }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 300
                     })
                 });
 
-                const data = await response.json();
-                let result = '';
-                
-                if (Array.isArray(data) && data[0]?.generated_text) {
-                    result = data[0].generated_text.trim();
-                } else if (data.error) {
-                    throw new Error(data.error);
-                } else {
-                    result = 'Unerwartetes Antwortformat';
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status}`);
                 }
+
+                const data = await response.json();
+                const result = data.choices[0].message.content;
                 
                 results[type].innerHTML = `<p class="fade-in">${result}</p>`;
             } catch (error) {
                 console.error('Error:', error);
-                results[type].innerHTML = '<p class="text-red-500">Fehler bei der Generierung. Bitte versuchen Sie es erneut.</p>';
+                results[type].innerHTML = '<p class="text-red-500">Fehler bei der Generierung.</p>';
                 throw error;
             }
         }
@@ -255,6 +279,17 @@ Antworte NUR mit der Reaktion, ohne Einleitung oder Erklärung.`;
                 analyzeBtn.click();
             }
         });
+
+        // Save API key to localStorage
+        apiKeyInput.addEventListener('input', (e) => {
+            localStorage.setItem('groq_api_key', e.target.value);
+        });
+
+        // Load saved API key
+        const savedKey = localStorage.getItem('groq_api_key');
+        if (savedKey) {
+            apiKeyInput.value = savedKey;
+        }
     </script>
 </body>
 </html>
