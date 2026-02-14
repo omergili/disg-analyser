@@ -199,7 +199,7 @@
         <div id="checklistSection" class="mb-12 hidden">
             <h3 class="text-xl font-semibold text-slate-900 mb-4">Was du wahrscheinlich vergisst</h3>
             <div class="bg-slate-50 border-2 border-slate-200 rounded-lg p-6">
-                <div id="checklistContent" class="text-slate-700 leading-relaxed space-y-3"></div>
+                <div id="checklistContent" class="space-y-3"></div>
             </div>
         </div>
 
@@ -456,19 +456,90 @@ Schreibe direkt und handlungsorientiert.`;
         async function generateChecklist(userType, task) {
             const info = typeInfo[userType];
 
-            const prompt = `Du bist ein DISG-Coach. Erstelle eine Checkliste für einen ${info.name}-Typ.
+            // Typ-spezifische Fokuspunkte
+            const focusAreas = {
+                d: {
+                    focus: 'Zwischenmenschliche Aspekte, Akzeptanz und emotionale Faktoren',
+                    details: `
+Als D-Typ neigst du dazu, den Menschen-Faktor zu unterschätzen. Fokussiere auf:
+- Zwischenmenschliche Bedürfnisse im Team (Wer braucht Unterstützung?)
+- Akzeptanz der Beteiligten (Sind alle wirklich an Bord?)
+- Pufferzeiten (Nicht alles läuft wie geplant)
+- Emotionale Auswirkungen (Wie fühlen sich die Betroffenen?)
+- Teamdynamik und Stimmung
+- Zeit für Beziehungsaufbau
+- Kommunikation der "Warum"-Frage`
+                },
+                i: {
+                    focus: 'Details, rechtliche Aspekte, Dokumentation und Kosten',
+                    details: `
+Als I-Typ neigst du dazu, Details und Strukturen zu übersehen. Fokussiere auf:
+- Fehlende Detailtiefe (Konkrete Zahlen, Daten, Fakten)
+- Rechtliche Fallstricke (Compliance, Verträge, Haftung)
+- Dokumentationspflichten (Was muss schriftlich festgehalten werden?)
+- Langfristige Kosten-Nutzen-Analysen (ROI über Begeisterung hinaus)
+- Strukturierte Prozesse und Workflows
+- Risikobewertung jenseits von Optimismus
+- Follow-through und Nachverfolgung`
+                },
+                s: {
+                    focus: 'Entscheidungsgeschwindigkeit, klare Ziele und Kursänderungen',
+                    details: `
+Als S-Typ neigst du dazu, zu lange abzuwarten und dich zu verzetteln. Fokussiere auf:
+- Notwendige Entscheidungsgeschwindigkeit (Wann ist "jetzt" der richtige Zeitpunkt?)
+- Klare Zielvorgaben gegen Verzettelung (Was ist das Hauptziel, was ist nice-to-have?)
+- Mut zur unpopulären Kurskorrektur (Auch wenn es unbequem ist)
+- Prioritäten setzen statt "allen gerecht werden"
+- Konfrontation wenn nötig
+- Tempo erhöhen trotz Unsicherheit
+- Innovation über bewährte Prozesse stellen`
+                },
+                g: {
+                    focus: 'Pragmatismus, Team-Begeisterung und Big Picture',
+                    details: `
+Als G-Typ neigst du dazu, dich in Details zu verlieren. Fokussiere auf:
+- Pragmatismus: "Done is better than perfect" (Wann ist gut genug?)
+- Begeisterung des Teams (Menschen brauchen mehr als Fakten)
+- Das "Big Picture" hinter den Daten (Wozu dient das alles?)
+- Geschwindigkeit über Perfektion
+- Emotionale und soziale Dynamiken
+- Flexibilität bei Standards
+- Die Vision kommunizieren, nicht nur die Details`
+                }
+            };
+
+            const typeFocus = focusAreas[userType];
+
+            const prompt = `Du bist ein erfahrener DISG-Coach. Erstelle eine prägnante, handlungsorientierte Checkliste für einen ${info.name}-Typ.
 
 AUFGABE: "${task}"
-USER-TYP: ${info.name} (Blindspots: ${info.blindSpots})
+USER-TYP: ${info.name}
 
-Erstelle eine präzise Checkliste mit 5-7 Punkten, die ein ${info.name}-Typ bei dieser Aufgabe WAHRSCHEINLICH VERGISST oder UNTERSCHÄTZT.
+SPEZIFISCHER FOKUS FÜR ${info.name.toUpperCase()}-TYP:
+${typeFocus.focus}
 
-Format:
-• [Konkreter Punkt der oft vergessen wird]
-• [Konkreter Punkt der oft vergessen wird]
-...
+KONTEXT:
+${typeFocus.details}
 
-Jeder Punkt sollte spezifisch und handlungsrelevant sein. Keine allgemeinen Floskeln.`;
+AUFGABE: Erstelle 6-8 konkrete, handlungsorientierte Bulletpoints, die ein ${info.name}-Typ bei dieser Aufgabe WAHRSCHEINLICH VERGISST oder UNTERSCHÄTZT.
+
+ANFORDERUNGEN:
+- Jeder Punkt muss DIREKT ZUM HANDELN anregen
+- Formuliere als Aufforderung oder Frage (nicht als Feststellung)
+- Konkret und spezifisch für die gegebene Aufgabe
+- Fokussiere auf die blinden Flecken des ${info.name}-Typs
+- Keine allgemeinen Floskeln
+- Kurz und prägnant (max. 1 Zeile pro Punkt)
+
+FORMAT (nutze eines dieser Muster):
+• Definiere [konkrete Sache] BEVOR du [Aktion]
+• Plane explizit [X] Stunden für [Y]
+• Hole aktiv Feedback von [Zielgruppe] ein
+• Setze eine harte Deadline für [Entscheidung]
+• Dokumentiere [spezifische Details] schriftlich
+• Frage: Wer ist emotional betroffen von [X]?
+
+Gib NUR die Bulletpoints zurück, keine Einleitung, keine Erklärung.`;
 
             try {
                 const response = await fetch('/api/analyze', {
@@ -482,10 +553,30 @@ Jeder Punkt sollte spezifisch und handlungsrelevant sein. Keine allgemeinen Flos
                 const data = await response.json();
                 
                 // Formatiere die Checkliste
-                const items = data.result.split('\n').filter(line => line.trim().startsWith('•') || line.trim().startsWith('-'));
-                const formattedItems = items.map(item => {
-                    const text = item.replace(/^[•\-]\s*/, '').trim();
-                    return `<div class="flex items-start"><svg class="w-5 h-5 text-slate-400 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg><p>${text}</p></div>`;
+                const items = data.result
+                    .split('\n')
+                    .filter(line => {
+                        const trimmed = line.trim();
+                        return trimmed.startsWith('•') || 
+                               trimmed.startsWith('-') || 
+                               trimmed.startsWith('*') ||
+                               /^\d+\./.test(trimmed);
+                    })
+                    .map(item => {
+                        // Entferne Bullet-Zeichen und nummerierung
+                        let text = item.replace(/^[•\-*]\s*/, '').replace(/^\d+\.\s*/, '').trim();
+                        return text;
+                    })
+                    .filter(text => text.length > 0);
+
+                // Erstelle HTML mit Icons
+                const formattedItems = items.map(text => {
+                    return `<div class="flex items-start gap-3 p-3 bg-white rounded border border-slate-200 hover:border-slate-300 transition">
+                        <svg class="w-5 h-5 text-amber-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                        </svg>
+                        <p class="text-slate-700 flex-1">${text}</p>
+                    </div>`;
                 }).join('');
                 
                 checklistContent.innerHTML = formattedItems;
