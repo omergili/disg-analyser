@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>myLurch – DISG Kommunikations-Analyse</title>
+    <title>myLurch – Strategische Planung durch Perspektivwechsel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         html {
             scroll-behavior: smooth;
         }
-        .quadrant-card {
+        .strategy-card {
             transition: all 0.2s ease;
         }
-        .quadrant-card:hover {
+        .strategy-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(30, 41, 59, 0.15);
         }
@@ -23,15 +23,17 @@
         .btn-primary:hover {
             background: #334155;
         }
-        .btn-secondary {
-            border: 2px solid #1e293b;
-            color: #1e293b;
+        .type-selector {
             transition: all 0.2s ease;
         }
-        .btn-secondary:hover {
-            background: #f8fafc;
+        .type-selector:hover {
+            border-color: #1e293b;
         }
-        #rewriteSection {
+        .type-selector:checked {
+            background: #1e293b;
+            border-color: #1e293b;
+        }
+        #checklistSection, #warningSection {
             scroll-margin-top: 2rem;
         }
     </style>
@@ -41,7 +43,7 @@
     <header class="bg-slate-900 text-white py-6 shadow-md">
         <div class="max-w-7xl mx-auto px-4">
             <h1 class="text-3xl font-bold tracking-tight">myLurch</h1>
-            <p class="text-slate-300 mt-1">DISG Kommunikations-Analyse</p>
+            <p class="text-slate-300 mt-1">Strategische Planung durch Perspektivwechsel</p>
         </div>
     </header>
 
@@ -49,10 +51,10 @@
     <section class="bg-slate-50 py-8 border-b border-slate-200">
         <div class="max-w-7xl mx-auto px-4 text-center">
             <h2 class="text-2xl font-semibold text-slate-900 mb-2">
-                Präzise Kommunikation durch Perspektivwechsel
+                Strategische Planung durch Perspektivwechsel
             </h2>
             <p class="text-slate-600 max-w-2xl mx-auto">
-                Analyse und Optimierung von Nachrichten basierend auf DISG-Persönlichkeitsprofilen
+                Betrachte Aufgaben und Projekte aus allen vier DISG-Perspektiven und entwickle ganzheitliche Strategien
             </p>
         </div>
     </section>
@@ -61,110 +63,143 @@
     <main class="max-w-7xl mx-auto px-4 py-12">
         <!-- Input Section -->
         <div class="bg-white border-2 border-slate-200 rounded-lg p-8 mb-8 shadow-sm">
-            <label for="messageInput" class="block text-lg font-semibold text-slate-900 mb-3">
-                Nachricht eingeben
+            <label for="taskInput" class="block text-lg font-semibold text-slate-900 mb-3">
+                Aufgabe oder Ziel definieren
             </label>
             <textarea 
-                id="messageInput" 
-                rows="5" 
+                id="taskInput" 
+                rows="4" 
                 class="w-full p-4 border-2 border-slate-300 rounded-lg focus:border-slate-900 focus:ring-2 focus:ring-slate-200 outline-none transition font-mono text-sm"
-                placeholder="Nachricht hier eingeben..."
+                placeholder="z.B. Ein neues Produkt launchen, Ein Team aufbauen, Eine Präsentation vorbereiten..."
             ></textarea>
             
-            <div class="mt-6 flex flex-col sm:flex-row gap-3">
-                <button 
-                    id="analyzeBtn"
-                    class="btn-primary text-white font-semibold py-3 px-8 rounded-lg flex-1 sm:flex-initial"
-                >
-                    Analysieren
-                </button>
-                <div class="flex gap-2 flex-wrap">
-                    <button class="btn-secondary font-medium py-3 px-6 rounded-lg rewrite-btn" data-type="d">
-                        Auf D umschreiben
-                    </button>
-                    <button class="btn-secondary font-medium py-3 px-6 rounded-lg rewrite-btn" data-type="i">
-                        Auf I umschreiben
-                    </button>
-                    <button class="btn-secondary font-medium py-3 px-6 rounded-lg rewrite-btn" data-type="s">
-                        Auf S umschreiben
-                    </button>
-                    <button class="btn-secondary font-medium py-3 px-6 rounded-lg rewrite-btn" data-type="g">
-                        Auf G umschreiben
-                    </button>
+            <!-- Type Selection -->
+            <div class="mt-6 mb-6">
+                <label class="block text-lg font-semibold text-slate-900 mb-3">
+                    Was ist dein eigener Typ?
+                </label>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <label class="flex items-center p-4 border-2 border-slate-200 rounded-lg cursor-pointer hover:border-slate-400 transition">
+                        <input type="radio" name="userType" value="d" class="type-selector w-4 h-4 text-slate-900 mr-3">
+                        <div>
+                            <div class="font-semibold text-slate-900">Dominant (D)</div>
+                            <div class="text-xs text-slate-600">Ergebnisorientiert</div>
+                        </div>
+                    </label>
+                    <label class="flex items-center p-4 border-2 border-slate-200 rounded-lg cursor-pointer hover:border-slate-400 transition">
+                        <input type="radio" name="userType" value="i" class="type-selector w-4 h-4 text-slate-900 mr-3">
+                        <div>
+                            <div class="font-semibold text-slate-900">Initiativ (I)</div>
+                            <div class="text-xs text-slate-600">Kommunikativ</div>
+                        </div>
+                    </label>
+                    <label class="flex items-center p-4 border-2 border-slate-200 rounded-lg cursor-pointer hover:border-slate-400 transition">
+                        <input type="radio" name="userType" value="s" class="type-selector w-4 h-4 text-slate-900 mr-3">
+                        <div>
+                            <div class="font-semibold text-slate-900">Stetig (S)</div>
+                            <div class="text-xs text-slate-600">Teamorientiert</div>
+                        </div>
+                    </label>
+                    <label class="flex items-center p-4 border-2 border-slate-200 rounded-lg cursor-pointer hover:border-slate-400 transition">
+                        <input type="radio" name="userType" value="g" class="type-selector w-4 h-4 text-slate-900 mr-3">
+                        <div>
+                            <div class="font-semibold text-slate-900">Gewissenhaft (G)</div>
+                            <div class="text-xs text-slate-600">Analytisch</div>
+                        </div>
+                    </label>
                 </div>
             </div>
+            
+            <button 
+                id="analyzeBtn"
+                class="btn-primary text-white font-semibold py-3 px-8 rounded-lg w-full"
+            >
+                Strategien entwickeln
+            </button>
         </div>
 
-        <!-- Results Grid -->
-        <div id="resultsSection" class="mb-12">
-            <h3 class="text-xl font-semibold text-slate-900 mb-6">Perspektivanalyse</h3>
+        <!-- Strategies Grid -->
+        <div id="strategiesSection" class="mb-12">
+            <h3 class="text-xl font-semibold text-slate-900 mb-6">DISG-Strategien</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- D - Dominant -->
-                <div class="quadrant-card bg-white border-2 border-slate-200 rounded-lg p-6">
+                <!-- D Strategy -->
+                <div class="strategy-card bg-white border-2 border-slate-200 rounded-lg p-6">
                     <div class="flex items-center mb-4 pb-3 border-b border-slate-200">
                         <div class="w-3 h-8 bg-red-600 rounded mr-3"></div>
                         <div>
-                            <h4 class="text-lg font-bold text-slate-900">Dominant (D)</h4>
-                            <p class="text-sm text-slate-600">Ergebnisorientiert, direkt</p>
+                            <h4 class="text-lg font-bold text-slate-900">Die D-Strategie</h4>
+                            <p class="text-sm text-slate-600">Ergebnisorientierter Ansatz</p>
                         </div>
                     </div>
-                    <div id="result-d" class="text-slate-700 leading-relaxed min-h-[80px]">
+                    <div id="strategy-d" class="text-slate-700 leading-relaxed min-h-[120px]">
                         <p class="text-slate-400 italic">Wartet auf Eingabe</p>
                     </div>
                 </div>
 
-                <!-- I - Initiativ -->
-                <div class="quadrant-card bg-white border-2 border-slate-200 rounded-lg p-6">
+                <!-- I Strategy -->
+                <div class="strategy-card bg-white border-2 border-slate-200 rounded-lg p-6">
                     <div class="flex items-center mb-4 pb-3 border-b border-slate-200">
                         <div class="w-3 h-8 bg-yellow-500 rounded mr-3"></div>
                         <div>
-                            <h4 class="text-lg font-bold text-slate-900">Initiativ (I)</h4>
-                            <p class="text-sm text-slate-600">Kommunikativ, enthusiastisch</p>
+                            <h4 class="text-lg font-bold text-slate-900">Die I-Strategie</h4>
+                            <p class="text-sm text-slate-600">Beziehungsorientierter Ansatz</p>
                         </div>
                     </div>
-                    <div id="result-i" class="text-slate-700 leading-relaxed min-h-[80px]">
+                    <div id="strategy-i" class="text-slate-700 leading-relaxed min-h-[120px]">
                         <p class="text-slate-400 italic">Wartet auf Eingabe</p>
                     </div>
                 </div>
 
-                <!-- S - Stetig -->
-                <div class="quadrant-card bg-white border-2 border-slate-200 rounded-lg p-6">
+                <!-- S Strategy -->
+                <div class="strategy-card bg-white border-2 border-slate-200 rounded-lg p-6">
                     <div class="flex items-center mb-4 pb-3 border-b border-slate-200">
                         <div class="w-3 h-8 bg-green-600 rounded mr-3"></div>
                         <div>
-                            <h4 class="text-lg font-bold text-slate-900">Stetig (S)</h4>
-                            <p class="text-sm text-slate-600">Geduldig, teamorientiert</p>
+                            <h4 class="text-lg font-bold text-slate-900">Die S-Strategie</h4>
+                            <p class="text-sm text-slate-600">Stabilitätsorientierter Ansatz</p>
                         </div>
                     </div>
-                    <div id="result-s" class="text-slate-700 leading-relaxed min-h-[80px]">
+                    <div id="strategy-s" class="text-slate-700 leading-relaxed min-h-[120px]">
                         <p class="text-slate-400 italic">Wartet auf Eingabe</p>
                     </div>
                 </div>
 
-                <!-- G - Gewissenhaft -->
-                <div class="quadrant-card bg-white border-2 border-slate-200 rounded-lg p-6">
+                <!-- G Strategy -->
+                <div class="strategy-card bg-white border-2 border-slate-200 rounded-lg p-6">
                     <div class="flex items-center mb-4 pb-3 border-b border-slate-200">
                         <div class="w-3 h-8 bg-blue-600 rounded mr-3"></div>
                         <div>
-                            <h4 class="text-lg font-bold text-slate-900">Gewissenhaft (G)</h4>
-                            <p class="text-sm text-slate-600">Analytisch, präzise</p>
+                            <h4 class="text-lg font-bold text-slate-900">Die G-Strategie</h4>
+                            <p class="text-sm text-slate-600">Qualitätsorientierter Ansatz</p>
                         </div>
                     </div>
-                    <div id="result-g" class="text-slate-700 leading-relaxed min-h-[80px]">
+                    <div id="strategy-g" class="text-slate-700 leading-relaxed min-h-[120px]">
                         <p class="text-slate-400 italic">Wartet auf Eingabe</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Rewrite Result Section -->
-        <div id="rewriteSection" class="mb-12 hidden">
-            <h3 class="text-xl font-semibold text-slate-900 mb-4">Umgeschriebene Nachricht</h3>
+        <!-- Warning Section -->
+        <div id="warningSection" class="mb-12 hidden">
+            <div class="bg-amber-50 border-l-4 border-amber-500 rounded-lg p-6 shadow-sm">
+                <div class="flex items-start">
+                    <svg class="w-6 h-6 text-amber-500 mt-1 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                    </svg>
+                    <div>
+                        <h4 class="text-lg font-bold text-amber-900 mb-2">Achtung: Blinde Flecken</h4>
+                        <div id="warningContent" class="text-amber-800 leading-relaxed"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Checklist Section -->
+        <div id="checklistSection" class="mb-12 hidden">
+            <h3 class="text-xl font-semibold text-slate-900 mb-4">Was du wahrscheinlich vergisst</h3>
             <div class="bg-slate-50 border-2 border-slate-200 rounded-lg p-6">
-                <div id="rewriteResult" class="text-slate-700 leading-relaxed whitespace-pre-wrap"></div>
-                <button id="copyBtn" class="mt-4 btn-secondary font-medium py-2 px-6 rounded-lg">
-                    In Zwischenablage kopieren
-                </button>
+                <div id="checklistContent" class="text-slate-700 leading-relaxed space-y-3"></div>
             </div>
         </div>
 
@@ -175,36 +210,35 @@
                 <h3 class="text-xl font-bold text-slate-900 mb-4">Der Nutzen</h3>
                 <div class="text-slate-700 space-y-3 leading-relaxed">
                     <p>
-                        <strong>Missverständnisse vermeiden:</strong> Unterschiedliche Persönlichkeitstypen interpretieren 
-                        identische Nachrichten verschieden. Was für einen direkten D-Typ klar ist, wirkt auf einen 
-                        harmoniebedürftigen S-Typ möglicherweise zu hart.
+                        <strong>Ganzheitliche Planung:</strong> Jeder DISG-Typ hat natürliche blinde Flecken. 
+                        Durch Betrachtung aus allen vier Perspektiven entstehen vollständigere Strategien.
                     </p>
                     <p>
-                        <strong>Effizienz steigern:</strong> Durch Anpassung der Kommunikation an den Empfänger 
-                        werden Rückfragen minimiert und Entscheidungen beschleunigt.
+                        <strong>Risiken minimieren:</strong> Was ein D-Typ als unwichtig einstuft, kann für 
+                        den Projekterfolg kritisch sein. Die systematische Perspektivwechsel deckt dies auf.
                     </p>
                     <p>
-                        <strong>Konflikte reduzieren:</strong> Präventive Kommunikationsoptimierung verhindert 
-                        unnötige Reibungspunkte im Team und mit Stakeholdern.
+                        <strong>Teamkommunikation verbessern:</strong> Verstehen, warum Kollegen andere 
+                        Prioritäten setzen. Konflikte werden zu produktiven Diskussionen.
                     </p>
                     <p>
-                        <strong>Anwendungsbereich:</strong> E-Mails, Meetings, Präsentationen, Feedback-Gespräche, 
-                        Change Management.
+                        <strong>Anwendungsbereich:</strong> Projektplanung, Produktentwicklung, Change Management, 
+                        Strategieentwicklung, Teamaufbau.
                     </p>
                 </div>
             </div>
 
             <!-- Das Modell -->
             <div>
-                <h3 class="text-xl font-bold text-slate-900 mb-4">Das Modell</h3>
+                <h3 class="text-xl font-bold text-slate-900 mb-4">Die Strategietypen</h3>
                 <div class="space-y-4">
                     <div class="flex items-start">
                         <div class="w-4 h-4 bg-red-600 rounded mr-3 mt-1 flex-shrink-0"></div>
                         <div>
-                            <h4 class="font-semibold text-slate-900">Dominant (D)</h4>
+                            <h4 class="font-semibold text-slate-900">D-Strategie (Dominant)</h4>
                             <p class="text-sm text-slate-600">
-                                Fokus auf Ergebnisse und Kontrolle. Direkte Kommunikation, schnelle Entscheidungen, 
-                                ungeduldig bei Details.
+                                Fokus auf schnelle Ergebnisse, klare Verantwortlichkeiten, Entscheidungsgeschwindigkeit. 
+                                Vergisst oft: Details, Prozesse, Menschen-Aspekte.
                             </p>
                         </div>
                     </div>
@@ -212,10 +246,10 @@
                     <div class="flex items-start">
                         <div class="w-4 h-4 bg-yellow-500 rounded mr-3 mt-1 flex-shrink-0"></div>
                         <div>
-                            <h4 class="font-semibold text-slate-900">Initiativ (I)</h4>
+                            <h4 class="font-semibold text-slate-900">I-Strategie (Initiativ)</h4>
                             <p class="text-sm text-slate-600">
-                                Fokus auf Menschen und Beziehungen. Enthusiastisch, kommunikativ, optimistisch, 
-                                beziehungsorientiert.
+                                Fokus auf Begeisterung, Zusammenarbeit, kreative Lösungen, Netzwerke. 
+                                Vergisst oft: Details, Struktur, Follow-through.
                             </p>
                         </div>
                     </div>
@@ -223,10 +257,10 @@
                     <div class="flex items-start">
                         <div class="w-4 h-4 bg-green-600 rounded mr-3 mt-1 flex-shrink-0"></div>
                         <div>
-                            <h4 class="font-semibold text-slate-900">Stetig (S)</h4>
+                            <h4 class="font-semibold text-slate-900">S-Strategie (Stetig)</h4>
                             <p class="text-sm text-slate-600">
-                                Fokus auf Stabilität und Teamarbeit. Geduldig, loyal, harmoniebedürftig, 
-                                bevorzugt bewährte Prozesse.
+                                Fokus auf Stabilität, bewährte Prozesse, Teamharmonie, schrittweises Vorgehen. 
+                                Vergisst oft: Geschwindigkeit, Innovation, Risiken.
                             </p>
                         </div>
                     </div>
@@ -234,10 +268,10 @@
                     <div class="flex items-start">
                         <div class="w-4 h-4 bg-blue-600 rounded mr-3 mt-1 flex-shrink-0"></div>
                         <div>
-                            <h4 class="font-semibold text-slate-900">Gewissenhaft (G)</h4>
+                            <h4 class="font-semibold text-slate-900">G-Strategie (Gewissenhaft)</h4>
                             <p class="text-sm text-slate-600">
-                                Fokus auf Qualität und Genauigkeit. Analytisch, detailorientiert, präzise, 
-                                faktenbasiert.
+                                Fokus auf Qualität, Daten, Risikomanagement, Standards, Dokumentation. 
+                                Vergisst oft: Geschwindigkeit, pragmatische Kompromisse, Beziehungen.
                             </p>
                         </div>
                     </div>
@@ -249,103 +283,115 @@
     <!-- Footer -->
     <footer class="bg-slate-900 text-slate-400 py-8 mt-16">
         <div class="max-w-7xl mx-auto px-4 text-center">
-            <p class="text-sm">myLurch – DISG Kommunikations-Analyse</p>
+            <p class="text-sm">myLurch – Strategische Planung durch Perspektivwechsel</p>
             <p class="text-xs mt-2">Powered by Groq AI</p>
         </div>
     </footer>
 
     <script>
-        const messageInput = document.getElementById('messageInput');
+        const taskInput = document.getElementById('taskInput');
         const analyzeBtn = document.getElementById('analyzeBtn');
-        const rewriteBtns = document.querySelectorAll('.rewrite-btn');
-        const copyBtn = document.getElementById('copyBtn');
-        const rewriteSection = document.getElementById('rewriteSection');
-        const rewriteResult = document.getElementById('rewriteResult');
+        const warningSection = document.getElementById('warningSection');
+        const warningContent = document.getElementById('warningContent');
+        const checklistSection = document.getElementById('checklistSection');
+        const checklistContent = document.getElementById('checklistContent');
         
-        const results = {
-            d: document.getElementById('result-d'),
-            i: document.getElementById('result-i'),
-            s: document.getElementById('result-s'),
-            g: document.getElementById('result-g')
+        const strategies = {
+            d: document.getElementById('strategy-d'),
+            i: document.getElementById('strategy-i'),
+            s: document.getElementById('strategy-s'),
+            g: document.getElementById('strategy-g')
         };
 
         const typeInfo = {
             d: {
                 name: 'Dominant',
-                traits: 'direkt, ergebnisorientiert, entscheidungsfreudig, ungeduldig',
-                focus: 'Fokus auf Ergebnisse und Kontrolle'
+                strengths: 'Schnelle Entscheidungen, Ergebnisorientierung, Direktheit',
+                blindSpots: 'Details, Prozesse, Menschen-Aspekte, Langfristfolgen'
             },
             i: {
                 name: 'Initiativ',
-                traits: 'enthusiastisch, kommunikativ, optimistisch, beziehungsorientiert',
-                focus: 'Fokus auf Menschen und positive Energie'
+                strengths: 'Begeisterung, Kreativität, Netzwerke, Teambuilding',
+                blindSpots: 'Details, Struktur, Follow-through, Realistische Planung'
             },
             s: {
                 name: 'Stetig',
-                traits: 'geduldig, loyal, kooperativ, harmoniebedürftig',
-                focus: 'Fokus auf Stabilität und Teamarbeit'
+                strengths: 'Stabilität, Prozesstreue, Teamharmonie, Verlässlichkeit',
+                blindSpots: 'Geschwindigkeit, Innovation, Risikobereitschaft, Konfrontation'
             },
             g: {
                 name: 'Gewissenhaft',
-                traits: 'analytisch, präzise, detailorientiert, qualitätsbewusst',
-                focus: 'Fokus auf Genauigkeit und Qualität'
+                strengths: 'Qualität, Analyse, Risikomanagement, Standards',
+                blindSpots: 'Geschwindigkeit, Pragmatismus, Beziehungen, Flexibilität'
             }
         };
 
-        // Analyze function
         analyzeBtn.addEventListener('click', async () => {
-            const text = messageInput.value.trim();
+            const task = taskInput.value.trim();
+            const userType = document.querySelector('input[name="userType"]:checked');
             
-            if (!text) {
-                alert('Bitte Nachricht eingeben.');
+            if (!task) {
+                alert('Bitte Aufgabe oder Ziel eingeben.');
+                return;
+            }
+
+            if (!userType) {
+                alert('Bitte eigenen Typ auswählen.');
                 return;
             }
 
             analyzeBtn.disabled = true;
-            analyzeBtn.textContent = 'Analysiere...';
-            rewriteSection.classList.add('hidden');
+            analyzeBtn.textContent = 'Entwickelt Strategien...';
+            
+            warningSection.classList.add('hidden');
+            checklistSection.classList.add('hidden');
 
-            Object.values(results).forEach(el => {
-                el.innerHTML = '<p class="text-slate-400 italic">Wird analysiert...</p>';
+            Object.values(strategies).forEach(el => {
+                el.innerHTML = '<p class="text-slate-400 italic">Wird entwickelt...</p>';
             });
 
             try {
+                // Strategien parallel entwickeln
                 await Promise.all([
-                    analyzeType('d', text),
-                    analyzeType('i', text),
-                    analyzeType('s', text),
-                    analyzeType('g', text)
+                    developStrategy('d', task),
+                    developStrategy('i', task),
+                    developStrategy('s', task),
+                    developStrategy('g', task)
                 ]);
+
+                // Warning und Checklist generieren
+                await generateWarning(userType.value, task);
+                await generateChecklist(userType.value, task);
+
+                // Scroll zu Warning
+                setTimeout(() => {
+                    warningSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 500);
+
             } catch (error) {
                 console.error('Fehler:', error);
             } finally {
                 analyzeBtn.disabled = false;
-                analyzeBtn.textContent = 'Analysieren';
+                analyzeBtn.textContent = 'Strategien entwickeln';
             }
         });
 
-        async function analyzeType(type, text) {
+        async function developStrategy(type, task) {
             const info = typeInfo[type];
             
-            // Hochwertiger System-Prompt mit Bezug auf "Der Nutzen"
-            const prompt = `Du bist ein professioneller DISG-Kommunikationsberater. Analysiere die folgende Nachricht aus der Perspektive eines ${info.name}-Typs.
+            const prompt = `Du bist ein strategischer Unternehmensberater mit DISG-Expertise. Entwickle eine ${info.name}-Strategie für folgende Aufgabe:
 
-DISG-Profil: ${info.name} (${info.traits}). ${info.focus}.
+AUFGABE: "${task}"
 
-Nachricht: "${text}"
+PERSPEKTIVE: ${info.name} (Stärken: ${info.strengths})
 
-AUFGABE: Erstelle eine präzise, professionelle Analyse (2-3 Sätze), die zeigt:
+Erstelle eine konkrete Strategie (3-4 Sätze), die zeigt:
 
-1. Wie dieser Persönlichkeitstyp die Nachricht interpretiert und welche Aspekte er priorisiert
-2. Welche potenziellen Missverständnisse oder Ineffizienzen entstehen könnten
-3. Konkrete Hinweise darauf, wie die Nachricht optimiert werden könnte, um Konflikte zu reduzieren
+1. WIE ein ${info.name}-Typ diese Aufgabe angehen würde
+2. WELCHE Aspekte aus dieser Sicht UNBEDINGT beachtet werden müssen
+3. KONKRETE erste Schritte, die dieser Typ setzen würde
 
-KONTEXT: 
-- Wenn die Nachricht zu vage ist, erkläre explizit, warum dies zu Ineffizienz führt
-- Wenn die Nachricht zu direkt/hart ist, weise auf Konfliktpotential hin
-- Wenn wichtige Details fehlen (bei G-Typ), benenne diese konkret
-
-Antworte sachlich, direkt und handlungsorientiert. Keine Floskeln, nur relevante Insights.`;
+Schreibe handlungsorientiert und spezifisch. Keine Theorie, sondern konkrete Vorgehensweise.`;
 
             try {
                 const response = await fetch('/api/analyze', {
@@ -357,113 +403,100 @@ Antworte sachlich, direkt und handlungsorientiert. Keine Floskeln, nur relevante
                 if (!response.ok) throw new Error(`API Error: ${response.status}`);
 
                 const data = await response.json();
-                results[type].innerHTML = `<p>${data.result}</p>`;
+                strategies[type].innerHTML = `<p>${data.result}</p>`;
             } catch (error) {
-                results[type].innerHTML = '<p class="text-red-600">Fehler bei der Analyse.</p>';
+                strategies[type].innerHTML = '<p class="text-red-600">Fehler bei der Entwicklung.</p>';
                 throw error;
             }
         }
 
-        // Rewrite function
-        rewriteBtns.forEach(btn => {
-            btn.addEventListener('click', async () => {
-                const targetType = btn.dataset.type;
-                const text = messageInput.value.trim();
+        async function generateWarning(userType, task) {
+            const info = typeInfo[userType];
+            const complementary = {
+                'd': 's',
+                'i': 'g',
+                's': 'd',
+                'g': 'i'
+            };
+            const weakType = complementary[userType];
+            const weakInfo = typeInfo[weakType];
+
+            const prompt = `Du bist ein DISG-Coach. Erstelle eine präzise Warnung für einen ${info.name}-Typ.
+
+AUFGABE: "${task}"
+USER-TYP: ${info.name} (Typische Blindspots: ${info.blindSpots})
+
+Erstelle eine direkte, hilfreiche Warnung (2-3 Sätze):
+
+1. Welche ${weakInfo.name}-Aspekte bei dieser Aufgabe kritisch sind
+2. Was der ${info.name}-Typ wahrscheinlich übersieht oder unterschätzt
+3. Eine konkrete Handlungsempfehlung
+
+Format: "Achtung: Als ${info.name}-Typ achte bei dieser Aufgabe besonders auf..."
+
+Schreibe direkt und handlungsorientiert.`;
+
+            try {
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: userType, text: prompt })
+                });
+
+                if (!response.ok) throw new Error(`API Error: ${response.status}`);
+
+                const data = await response.json();
+                warningContent.innerHTML = `<p>${data.result}</p>`;
+                warningSection.classList.remove('hidden');
+            } catch (error) {
+                console.error('Warning error:', error);
+            }
+        }
+
+        async function generateChecklist(userType, task) {
+            const info = typeInfo[userType];
+
+            const prompt = `Du bist ein DISG-Coach. Erstelle eine Checkliste für einen ${info.name}-Typ.
+
+AUFGABE: "${task}"
+USER-TYP: ${info.name} (Blindspots: ${info.blindSpots})
+
+Erstelle eine präzise Checkliste mit 5-7 Punkten, die ein ${info.name}-Typ bei dieser Aufgabe WAHRSCHEINLICH VERGISST oder UNTERSCHÄTZT.
+
+Format:
+• [Konkreter Punkt der oft vergessen wird]
+• [Konkreter Punkt der oft vergessen wird]
+...
+
+Jeder Punkt sollte spezifisch und handlungsrelevant sein. Keine allgemeinen Floskeln.`;
+
+            try {
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: userType, text: prompt })
+                });
+
+                if (!response.ok) throw new Error(`API Error: ${response.status}`);
+
+                const data = await response.json();
                 
-                if (!text) {
-                    alert('Bitte Nachricht eingeben.');
-                    return;
-                }
-
-                btn.disabled = true;
-                const originalText = btn.textContent;
-                btn.textContent = 'Schreibt um...';
-
-                rewriteSection.classList.remove('hidden');
-                rewriteResult.textContent = 'Nachricht wird umgeschrieben...';
-
-                // Sanfte Scroll-Animation zum Rewrite-Bereich
-                setTimeout(() => {
-                    rewriteSection.scrollIntoView({ 
-                        behavior: 'smooth', 
-                        block: 'start'
-                    });
-                }, 100);
-
-                try {
-                    const info = typeInfo[targetType];
-                    
-                    // Hochwertiger Umschreib-Prompt
-                    const prompt = `Du bist ein professioneller Kommunikationsberater mit Expertise in DISG-Modellen. Transformiere die folgende Nachricht für einen ${info.name}-Typ.
-
-ZIEL-PROFIL: ${info.name}
-- Merkmale: ${info.traits}
-- ${info.focus}
-
-ORIGINAL-NACHRICHT:
-"${text}"
-
-AUFGABE: Schreibe die Nachricht komplett um, sodass sie:
-
-1. DIE SPRACHE DES ZIELTYPS SPIEGELT:
-   ${targetType === 'd' ? '- Direkt, knapp, ergebnisorientiert\n   - Klare Handlungsaufforderungen\n   - Bottom-Line zuerst\n   - Keine Umschweife' : ''}
-   ${targetType === 'i' ? '- Enthusiastisch, positiv formuliert\n   - Persönliche Ansprache\n   - Vision und Möglichkeiten betonen\n   - Beziehungsaspekte einbeziehen' : ''}
-   ${targetType === 's' ? '- Ruhig, unterstützend, teamorientiert\n   - Betonung von Gemeinsamkeit ("wir")\n   - Schrittweise Herangehensweise\n   - Stabilität und Sicherheit vermitteln' : ''}
-   ${targetType === 'g' ? '- Faktenbasiert, präzise, strukturiert\n   - Daten und Details einbeziehen\n   - Logische Argumentation\n   - Qualitätsorientierung betonen' : ''}
-
-2. KONFLIKTE REDUZIERT:
-   - Potentielle Missverständnisse eliminieren
-   - Triggerpunkte des Typs vermeiden
-   - Optimale Empfangsbereitschaft schaffen
-
-3. KERNBOTSCHAFT BEIBEHÄLT:
-   - Inhaltlich identisch
-   - Nur Ton, Struktur und Formulierung anpassen
-
-Gib NUR die umgeschriebene Nachricht zurück. Keine Erklärungen, keine Metakommentare, keine Anführungszeichen am Anfang/Ende.`;
-
-                    const response = await fetch('/api/analyze', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ type: targetType, text: prompt })
-                    });
-
-                    if (!response.ok) throw new Error(`API Error: ${response.status}`);
-
-                    const data = await response.json();
-                    
-                    // Entferne eventuelle Anführungszeichen am Anfang/Ende
-                    let result = data.result.trim();
-                    if ((result.startsWith('"') && result.endsWith('"')) || 
-                        (result.startsWith("'") && result.endsWith("'"))) {
-                        result = result.slice(1, -1);
-                    }
-                    
-                    rewriteResult.textContent = result;
-                } catch (error) {
-                    rewriteResult.textContent = 'Fehler beim Umschreiben. Bitte versuchen Sie es erneut.';
-                    console.error('Fehler:', error);
-                } finally {
-                    btn.disabled = false;
-                    btn.textContent = originalText;
-                }
-            });
-        });
-
-        // Copy function
-        copyBtn.addEventListener('click', () => {
-            const text = rewriteResult.textContent;
-            navigator.clipboard.writeText(text).then(() => {
-                const originalText = copyBtn.textContent;
-                copyBtn.textContent = 'Kopiert!';
-                setTimeout(() => {
-                    copyBtn.textContent = originalText;
-                }, 2000);
-            });
-        });
+                // Formatiere die Checkliste
+                const items = data.result.split('\n').filter(line => line.trim().startsWith('•') || line.trim().startsWith('-'));
+                const formattedItems = items.map(item => {
+                    const text = item.replace(/^[•\-]\s*/, '').trim();
+                    return `<div class="flex items-start"><svg class="w-5 h-5 text-slate-400 mr-3 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg><p>${text}</p></div>`;
+                }).join('');
+                
+                checklistContent.innerHTML = formattedItems;
+                checklistSection.classList.remove('hidden');
+            } catch (error) {
+                console.error('Checklist error:', error);
+            }
+        }
 
         // Enter to submit
-        messageInput.addEventListener('keydown', (e) => {
+        taskInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
                 e.preventDefault();
                 analyzeBtn.click();
