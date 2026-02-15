@@ -448,28 +448,50 @@
             const settingContexts = {
                 solo: {
                     name: 'Solo-Setting',
-                    roleContext: 'Inhaber/Freelancer selbst',
-                    delegation: 'Externe Dienstleister oder Tools'
+                    whoGuidance: 'Du selbst führst aus oder outsourcest',
+                    whoExamples: {
+                        d: 'Du entscheidest sofort, externe Dienstleister setzen um',
+                        i: 'Du kommunizierst, Tools automatisieren Routinen',
+                        s: 'Du arbeitest schrittweise ab, Templates strukturieren',
+                        g: 'Du recherchierst Standards selbst, Fachexperten prüfen Details'
+                    },
+                    focusNote: 'Fokus auf Tools, Vorlagen, externes Outsourcing (VA, Steuerberater, etc.)',
+                    roleStyle: 'Du (Eigenleistung) oder Externe (Dienstleister/Tools)'
                 },
                 small_team: {
                     name: 'Kleines Team',
-                    roleContext: 'Teammitglieder mit klaren Rollen',
-                    delegation: 'Direkte Aufgabenverteilung im Team'
+                    whoGuidance: 'Du führst, Generalisten im Team setzen um',
+                    whoExamples: {
+                        d: 'Du gibst Deadline vor, Generalist mit meister Kapazität übernimmt',
+                        i: 'Du motivierst, Teammitglied am nächsten am Thema setzt um',
+                        s: 'Du koordinierst, Aufgaben nach aktueller Auslastung verteilen',
+                        g: 'Du prüfst Qualität, Teammitglied mit Kompetenz führt aus'
+                    },
+                    focusNote: 'Verteilung nach Kompetenz und Kapazität, nicht nach Abteilung',
+                    roleStyle: 'Du (Führung) + Generalist A/B/C (Umsetzung)'
                 },
                 specialists: {
                     name: 'Spezialisten-Team',
-                    roleContext: 'Fachexperten nach Kompetenz',
-                    delegation: 'Delegation an Abteilungsleiter/Experten'
+                    whoGuidance: 'Du delegierst strategisch an Experten/Abteilungen',
+                    whoExamples: {
+                        d: 'Du beauftragst Abteilung X mit harter Deadline',
+                        i: 'Du briefst Fachbereich Y, vernetzt Stakeholder',
+                        s: 'Du koordinierst zwischen Abteilungen, holst Feedback ein',
+                        g: 'Du definierst Standards, Fachabteilung Z validiert'
+                    },
+                    focusNote: 'Deine Rolle ist strategisch/delegierend, nicht operativ',
+                    roleStyle: 'Du (Strategie/Delegation) → Abteilung/Experte (Ausführung)'
                 }
             };
 
             const settingContext = settingContexts[setting];
+            const whoExample = settingContext.whoExamples[type];
             
             const prompt = `Erstelle eine ${info.name}-Strategie für: "${task}" im ${settingContext.name}.
 
 FORMAT (strikte Einhaltung):
 
-**Kernziel:** [1 prägnanter Satz - Was ist das Hauptziel dieser Perspektive?]
+**Kernziel:** [1 prägnanter Satz - Was ist das Hauptziel dieser ${info.name}-Perspektive?]
 
 **Vorgehensweise:**
 • [Verb] [konkrete Aktion]
@@ -477,21 +499,33 @@ FORMAT (strikte Einhaltung):
 • [Verb] [konkrete Aktion]
 • [Verb] [konkrete Aktion]
 
-**Verantwortung:** [Wer übernimmt was? Bei ${settingContext.name}: ${settingContext.roleContext}]
+**Verantwortung:** [Wer macht was im ${settingContext.name}?]
 
-**Key-Check:** [Eine kritische Frage zur Selbstprüfung]
+**Key-Check:** [Eine kritische Frage zur Selbstprüfung aus ${info.name}-Sicht]
 
-REGELN:
+STRIKTE REGELN FÜR VERANTWORTLICHKEITEN:
+
+${settingContext.name} - ${settingContext.whoGuidance}:
+${settingContext.focusNote}
+
+Formulierungsstil: ${settingContext.roleStyle}
+Beispiel für ${info.name}-Typ: ${whoExample}
+
+WICHTIG - DISG-SPEZIFISCHE VERANTWORTUNG:
+Ein ${info.name}-Typ im ${settingContext.name} agiert so:
+${type === 'd' ? '- Gibt Deadlines vor, fordert Ergebnisse ein, entscheidet schnell' : ''}
+${type === 'i' ? '- Kommuniziert Vision, vernetzt Beteiligte, motiviert zur Umsetzung' : ''}
+${type === 's' ? '- Koordiniert sanft, verteilt nach Auslastung, holt Konsens ein' : ''}
+${type === 'g' ? '- Definiert Standards, prüft Details, validiert Qualität' : ''}
+
+GENERELLE REGELN:
 - KEINE Ich-Form ("Ich würde...")
-- KEINE narrativen Einleitungen
 - NUR operative Handlungsanweisungen
-- Verben am Satzanfang (Erstelle, Prüfe, Definiere, Delegiere, Implementiere, Setze, etc.)
+- Verben am Satzanfang (Erstelle, Prüfe, Definiere, Delegiere, Beauftrage, etc.)
 - KEINE Füllwörter
-- Sachlich wie ein Projektmanager-Assistent
 - Kurz und präzise
 
-PERSPEKTIVE: ${info.name} (${info.strengths})
-SETTING: ${settingContext.name}`;
+PERSPEKTIVE: ${info.name} (${info.strengths})`;
 
             try {
                 const response = await fetch('/api/analyze', {
